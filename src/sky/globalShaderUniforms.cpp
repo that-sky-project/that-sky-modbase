@@ -82,7 +82,7 @@ SMB_API_ATTR SkyShaderUniform *SMB_API Sky_Gsu_FindUniform(
     name);
 }
 
-SMB_API_ATTR UINT32 SMB_API Sky_ExGsu_FindUniformFloat(
+SMB_API_ATTR UINT32 SMB_API SkyEx_Gsu_FindUniformFloat(
   SkyGlobalShaderUniforms *self,
   const char *name,
   float *buffer

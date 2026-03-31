@@ -192,6 +192,18 @@ typedef UINT32 (SMB_API *PFN_SkyExGsu_FindUniformFloat)(
 // [SECTION] Sky/Resources
 // ----------------------------------------------------------------------------
 
+// - About the Resource API
+//
+// The resource API proxies the game's resource lookup function. This lookup
+// function takes a resource alias and returns the bundle name and relative path
+// of the resource (in the vanilla game, the resource alias is the same as the
+// resource's relative path).
+// 
+// After being proxied by Modbase, the function first looks up the resource using
+// the passed alias in the game, and only then in the mod. Therefore, it is not
+// possible to directly replace game resources by registering a resource with the
+// same name.
+
 // [Extended] Register the resource file at the specified path into the game's
 // resource manifest under the name `name`.
 // 
