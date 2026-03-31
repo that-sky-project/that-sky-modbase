@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="src">
+      <UniqueIdentifier>{44f70bd6-3276-474a-917a-f7900fe9a876}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\sky">
+      <UniqueIdentifier>{2064c295-4af5-42ba-b267-d8e096070f8c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\includes">
+      <UniqueIdentifier>{790bde0d-1e57-4872-9368-2cfb227a1fd2}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\dllmain.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\sky\globalShaderUniforms.cpp">
+      <Filter>src\sky</Filter>
+    </ClCompile>
+    <ClCompile Include="src\sky\resourceManifest.cpp">
+      <Filter>src\sky</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\smb_internal.hpp">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\includes\htskymodbase.h">
+      <Filter>src\includes</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
