@@ -1,11 +1,13 @@
 {
-  "package_name": "that-sky-sounds",
-  "version": "0.0.1",
+  "package_name": "that-sky-modbase",
+  "version": "1.0.0",
   "game_edition": 2,
   "mod_name": "ThatSkyModbase (HTSkyModbase)",
   "description": "Sky:CotL full UGC basic library.",
   "main": "that-sky-modbase.dll",
-  "dependencies": {},
+  "dependencies": {
+    "htmodloader": ">=1.9.0"
+  },
   "keywords": [],
   "author": "HTMonkeyG",
   "license": "MIT",
