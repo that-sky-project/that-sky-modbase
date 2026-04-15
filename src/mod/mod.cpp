@@ -6,7 +6,7 @@
 __declspec(dllexport) HTStatus HTMLAPI HTModOnInit(
   void *reserved
 ) {
-  SmbiModInitializer::setupAll(hModuleDll);
+  SmbiModInitializer::SetupAll(hModuleDll);
 
   return HT_SUCCESS;
 }

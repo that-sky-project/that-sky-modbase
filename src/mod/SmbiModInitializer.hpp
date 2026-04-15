@@ -19,7 +19,7 @@ public:
     return p;
   }
 
-  static HTStatus setupAll(
+  static HTStatus SetupAll(
     HMODULE hModuleDll);
 
   // Register a initializer.
@@ -36,11 +36,11 @@ public:
 
   ~SmbiModInitializer() = default;
 
-  inline const SmbiModInitializer *getPrev() const {
+  inline const SmbiModInitializer *GetPrev() const {
     return prev;
   }
 
-  inline const char *getName() const {
+  inline const char *GetName() const {
     return name;
   }
 

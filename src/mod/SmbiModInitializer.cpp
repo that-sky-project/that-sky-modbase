@@ -1,16 +1,13 @@
 #include "ModInternal.hpp"
 #include "mod/SmbiModInitializer.hpp"
 
-HTStatus SmbiModInitializer::setupAll(
+HTStatus SmbiModInitializer::SetupAll(
   HMODULE hModuleDll
 ) {
+  using PCInit = const SmbiModInitializer *;
   HTStatus s = HT_SUCCESS;
 
-  for (
-    const SmbiModInitializer *p = SmbiModInitializer::list();
-    p;
-    p = p->getPrev()
-  ) {
+  for (PCInit p = SmbiModInitializer::list(); p; p = p->GetPrev()) {
     if (!(*p)(hModuleDll))
       s = HT_FAIL;
   }
