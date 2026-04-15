@@ -7,13 +7,22 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\dllmain.cpp" />
-    <ClCompile Include="src\sky\globalShaderUniforms.cpp" />
-    <ClCompile Include="src\sky\resourceManifest.cpp" />
+    <ClCompile Include="src\api\Gsus.cpp" />
+    <ClCompile Include="src\api\Resources.cpp" />
+    <ClCompile Include="src\Entry.cpp" />
+    <ClCompile Include="src\mod\Mod.cpp" />
+    <ClCompile Include="src\mod\SmbiModInitializer.cpp" />
+    <ClCompile Include="src\sky\SmbiSkyResource.cpp" />
+    <ClCompile Include="src\utils\StringUtils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\includes\htskymodbase.h" />
-    <ClInclude Include="src\smb_internal.hpp" />
+    <ClInclude Include="src\ModInternal.hpp" />
+    <ClInclude Include="src\mod\SmbiModInitializer.hpp" />
+    <ClInclude Include="src\sky\SmbiSkyResource.hpp" />
+    <ClInclude Include="src\utils\SmbiObject.hpp" />
+    <ClInclude Include="src\utils\StringUtils.hpp" />
+    <ClInclude Include="src\utils\TypeAliases.hpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
@@ -43,7 +52,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Main|x64'">
     <OutDir>$(ProjectDir)\dist\</OutDir>
     <IntDir>$(ProjectDir)\dist\</IntDir>
-    <TargetName>htskymodbase</TargetName>
+    <TargetName>that-sky-modbase</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Main|x64'">
     <ClCompile>

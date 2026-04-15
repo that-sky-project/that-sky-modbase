@@ -1,4 +1,5 @@
-#include "smb_internal.hpp"
+#include "ModInternal.hpp"
+#include "mod/SmbiModInitializer.hpp"
 
 HTStatus SmbiModInitializer::setupAll(
   HMODULE hModuleDll

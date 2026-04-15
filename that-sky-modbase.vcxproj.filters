@@ -10,24 +10,60 @@
     <Filter Include="src\includes">
       <UniqueIdentifier>{790bde0d-1e57-4872-9368-2cfb227a1fd2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\mod">
+      <UniqueIdentifier>{49d0da85-5408-4610-934d-d268b63c149b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\api">
+      <UniqueIdentifier>{7a0aadf3-3a60-4e74-9d91-a9eaec765d59}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\utils">
+      <UniqueIdentifier>{77262e26-d773-4f3d-bbca-2b940dfc2381}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\dllmain.cpp">
+    <ClCompile Include="src\Entry.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\sky\globalShaderUniforms.cpp">
+    <ClCompile Include="src\sky\SmbiSkyResource.cpp">
       <Filter>src\sky</Filter>
     </ClCompile>
-    <ClCompile Include="src\sky\resourceManifest.cpp">
-      <Filter>src\sky</Filter>
+    <ClCompile Include="src\mod\Mod.cpp">
+      <Filter>src\mod</Filter>
+    </ClCompile>
+    <ClCompile Include="src\mod\SmbiModInitializer.cpp">
+      <Filter>src\mod</Filter>
+    </ClCompile>
+    <ClCompile Include="src\api\Gsus.cpp">
+      <Filter>src\api</Filter>
+    </ClCompile>
+    <ClCompile Include="src\api\Resources.cpp">
+      <Filter>src\api</Filter>
+    </ClCompile>
+    <ClCompile Include="src\utils\StringUtils.cpp">
+      <Filter>src\utils</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\smb_internal.hpp">
-      <Filter>src</Filter>
-    </ClInclude>
     <ClInclude Include="src\includes\htskymodbase.h">
       <Filter>src\includes</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ModInternal.hpp">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\sky\SmbiSkyResource.hpp">
+      <Filter>src\sky</Filter>
+    </ClInclude>
+    <ClInclude Include="src\mod\SmbiModInitializer.hpp">
+      <Filter>src\mod</Filter>
+    </ClInclude>
+    <ClInclude Include="src\utils\SmbiObject.hpp">
+      <Filter>src\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="src\utils\StringUtils.hpp">
+      <Filter>src\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="src\utils\TypeAliases.hpp">
+      <Filter>src\utils</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

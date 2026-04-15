@@ -207,16 +207,21 @@ typedef UINT32 (SMB_API *PFN_SkyExGsu_FindUniformFloat)(
 // [Extended] Register the resource file at the specified path into the game's
 // resource manifest under the name `name`.
 // 
+// Set `name` to NULL to use the path as its name. If `forceUpdate` is TRUE, then
+// resource with the same name will be overriden.
+//
 // The resource must be located in the `<mod>/assets/` directory of the mod
 // folder, `path` must be a path relative to `<mod>/assets/`. Any registration
 // attempt that goes outside the directory will fail.
 //
 // During development, it is recommended to use the same resource directory
 // structure as the game (see the game's `assets/data/initial` folder for details).
+// A great way is to use "Data/" at the beginning of `path`.
 SMB_API_ATTR HTStatus SMB_API SkyEx_Resources_RegisterSingleEx(
   HMODULE hModuleDll,
+  const char *path,
   const char *name,
-  const char *path);
+  BOOL forceUpdate);
 
 typedef HTStatus (SMB_API *PFN_SkyEx_Resources_RegisterSingleEx)(
   HMODULE,

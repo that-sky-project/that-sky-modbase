@@ -1,4 +1,7 @@
-#include "smb_internal.hpp"
+#include "includes/htmod.h"
+
+#include "ModInternal.hpp"
+#include "mod/SmbiModInitializer.hpp"
 
 __declspec(dllexport) HTStatus HTMLAPI HTModOnInit(
   void *reserved

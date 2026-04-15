@@ -1,48 +1,14 @@
-#include "smb_internal.hpp"
+#include "ModInternal.hpp"
+#include "utils/TypeAliases.hpp"
+#include "utils/StringUtils.hpp"
+#include "sky/SmbiSkyResource.hpp"
+#include "mod/SmbiModInitializer.hpp"
 
 // ----------------------------------------------------------------------------
 // [SECTION] Sky/Resources/declarations
 // ----------------------------------------------------------------------------
 
 typedef void *ResourceManifest;
-
-struct ResourceManifestEntry {
-  ResourceManifestEntry() = default;
-
-  const char *path;
-  const char *bundle;
-  const char *externalData;
-  int unk[3];
-  u32 location;
-  u64 hash;
-  i08 active;
-};
-
-class SmbiResourceManifestEntry {
-public:
-  SmbiResourceManifestEntry(
-    const std::string &path,
-    const std::string &bundle
-  )
-    : path(path)
-    , bundle(bundle)
-    , externalData("00000000000000000000")
-  {
-    e.path = this->path.c_str();
-    e.bundle = this->bundle.c_str();
-    e.externalData = this->externalData.c_str();
-  }
-
-  const ResourceManifestEntry *getEntry() const {
-    return &e;
-  }
-
-private:
-  ResourceManifestEntry e;
-  std::string path;
-  std::string bundle;
-  std::string externalData;
-};
 
 typedef const ResourceManifestEntry *(__fastcall *PFN_ResourceManifest_LookUp)(
   ResourceManifest *, const char *);
@@ -53,6 +19,12 @@ static HTStatus fnInit_ResourceManifest(
 static const ResourceManifestEntry *hook_ResourceManifest_LookUp(
   ResourceManifest *,
   const char *);
+
+// ----------------------------------------------------------------------------
+// [SECTION] Sky/Resources/variables
+// ----------------------------------------------------------------------------
+
+static SmbiSkyResourceBarn gResourceBarn;
 
 // ----------------------------------------------------------------------------
 // [SECTION] Sky/Resources/init
@@ -67,7 +39,7 @@ static const HTAsmSig sigE8_ResourceManifest_LookUp = {
   "48 89 CF 48 81 C1 ?  ?  ?  ?  E8 ?  ?  ?  ?  48 "
   "85 C0 0F 84",
   HT_SCAN_E8,
-  0x15
+  0x0A
 };
 
 static HTAsmFunction sfn_ResourceManifest_LookUp = {
@@ -84,19 +56,14 @@ static HTStatus fnInit_ResourceManifest(
   (void)hModuleDll;
   (void)self;
 
+  gResourceBarn.Initialize();
+
   sfn_ResourceManifest_LookUp.detour = (void *)hook_ResourceManifest_LookUp;
 
   return smbiCreateAndEnableHook(
     &sigE8_ResourceManifest_LookUp,
     &sfn_ResourceManifest_LookUp);;
 }
-
-// ----------------------------------------------------------------------------
-// [SECTION] Sky/Resources/variables
-// ----------------------------------------------------------------------------
-
-static std::shared_mutex gMutex;
-static std::unordered_map<std::string, SmbiResourceManifestEntry> gSavedEntry;
 
 // ----------------------------------------------------------------------------
 // [SECTION] Sky/Resources/functions
@@ -106,22 +73,15 @@ static const ResourceManifestEntry *hook_ResourceManifest_LookUp(
   ResourceManifest *pThis,
   const char *name
 ) {
-  using Tp = const ResourceManifestEntry *;
+  using PEntry = const ResourceManifestEntry *;
 
-  Tp p = ((PFN_ResourceManifest_LookUp)sfn_ResourceManifest_LookUp.origin)(
+  PEntry p = ((PFN_ResourceManifest_LookUp)sfn_ResourceManifest_LookUp.origin)(
     pThis,
     name);
   if (p)
     return p;
 
-  {
-    std::shared_lock lock{gMutex};
-    auto it = gSavedEntry.find(name);
-    if (it == gSavedEntry.end())
-      return nullptr;
-
-    return it->second.getEntry();
-  }
+  return gResourceBarn.Find(name)->GetEntry();
 }
 
 // Get the mod's folder.
@@ -142,6 +102,7 @@ static HTStatus getModFolder(
     return smbiFail(HTError_AccessDenied);
 }
 
+// Get the assets path of the mod.
 static HTStatus getBundlePathFor(
   const std::wstring &modFolder,
   std::string &bundlePath
@@ -159,7 +120,7 @@ static HTStatus getBundlePathFor(
 
   // We assume the current working directory is the directory containing the
   // game executable.
-  HTPathRelative(buffer, L"data/assets/initial", buffer, MAX_LEN);
+  HTPathRelative(buffer, L"data/assets", buffer, MAX_LEN);
 
   bundlePath = wcstoansi(buffer);
   return HT_SUCCESS;
@@ -181,17 +142,15 @@ static HTStatus verifyPath(
 
 SMB_API_ATTR HTStatus SMB_API SkyEx_Resources_RegisterSingleEx(
   HMODULE hModuleDll,
+  const char *path,
   const char *name,
-  const char *path
+  BOOL forceUpdate
 ) {
   if (!hModuleDll || !name || !path)
     return smbiFail(HTError_InvalidHandle);
-  
-  {
-    std::shared_lock lock{gMutex};
-    if (gSavedEntry.find(name) != gSavedEntry.end())
-      return smbiFail(HTError_AlreadyExists);
-  }
+
+  if (gResourceBarn.Find(name) && !forceUpdate)
+    return smbiFail(HTError_AlreadyExists);
 
   std::wstring modFolder;
   if (!getModFolder(modFolder, hModuleDll))
@@ -205,10 +164,10 @@ SMB_API_ATTR HTStatus SMB_API SkyEx_Resources_RegisterSingleEx(
   if (!verifyPath(realPath, modFolder, path))
     return HT_FAIL;
 
-  {
-    std::lock_guard lock{gMutex};
-    gSavedEntry.try_emplace(name, SmbiResourceManifestEntry{realPath, bundle});
-  }
+  if (name)
+    gResourceBarn.Add(bundle, path, name);
+  else
+    gResourceBarn.Add(bundle, path);
 
   return smbiSuccess();
 }
