@@ -73,33 +73,13 @@ static const ResourceManifestEntry *hook_ResourceManifest_LookUp(
   ResourceManifest *pThis,
   const char *name
 ) {
-  using PEntry = const ResourceManifestEntry *;
+  const SmbiResourceManifestEntry *p1 = gResourceBarn.Find(name);
+  if (p1)
+    return p1->GetEntry();
 
-  PEntry p = ((PFN_ResourceManifest_LookUp)sfn_ResourceManifest_LookUp.origin)(
+  return ((PFN_ResourceManifest_LookUp)sfn_ResourceManifest_LookUp.origin)(
     pThis,
     name);
-  if (p)
-    return p;
-
-  return gResourceBarn.Find(name)->GetEntry();
-}
-
-// Get the mod's folder.
-static HTStatus getModFolder(
-  std::wstring &modFolder,
-  HMODULE hModuleDll
-) {
-  HTHandle hManifest = HTGetModManifest(hModuleDll);
-  if (!hManifest)
-    return smbiFail(HTError_ModuleNotFound);
-
-  u32 length = HTGetModInfoFrom(hManifest, HTModInfoFields_Folder, nullptr, 0);
-  if (!length)
-    return smbiFail(HTError_AccessDenied);
-
-  modFolder.resize(length);
-  if (!HTGetModInfoFrom(hManifest, HTModInfoFields_Folder, modFolder.data(), length))
-    return smbiFail(HTError_AccessDenied);
 }
 
 // Get the assets path of the mod.
@@ -107,8 +87,7 @@ static HTStatus getBundlePathFor(
   const std::wstring &modFolder,
   std::string &bundlePath
 ) {
-  wchar_t buffer[768];
-  constexpr int MAX_LEN = sizeof(buffer) / sizeof(wchar_t);
+  wchar_t buffer[kMaxPathLen];
 
   // TODO: Maybe we don't need to use HTPathJoin().
   const wchar_t *paths[] = {
@@ -116,23 +95,36 @@ static HTStatus getBundlePathFor(
     L"assets",
     nullptr
   };
-  HTPathJoin(buffer, paths, MAX_LEN);
+  HTPathJoin(buffer, paths, kMaxPathLen);
 
   // We assume the current working directory is the directory containing the
   // game executable.
-  HTPathRelative(buffer, L"data/assets", buffer, MAX_LEN);
+  HTPathRelative(buffer, L"data/assets", buffer, kMaxPathLen);
 
   bundlePath = wcstoansi(buffer);
   return HT_SUCCESS;
 }
 
 static HTStatus verifyPath(
-  std::string &result,
-  const std::wstring &modFolder,
-  const char *path
+  TgcString &result,
+  const TgcWString &modFolder,
+  cstring path
 ) {
-  // TODO: Verify the path.
-  result = path;
+  wchar_t buffer[kMaxPathLen];
+  TgcWString pathWide = ansitowcs(path);
+
+  const wchar_t *paths[] = {
+    modFolder.c_str(),
+    L"assets",
+    pathWide.c_str(),
+    nullptr
+  };
+  HTPathJoin(buffer, paths, kMaxPathLen);
+
+  if (!smbiIsPathWithin(buffer, modFolder))
+    return smbiFail(HTError_AccessDenied);
+
+  result = wcstoansi(buffer);
   return HT_SUCCESS;
 }
 
@@ -141,19 +133,22 @@ static HTStatus verifyPath(
 // ----------------------------------------------------------------------------
 
 SMB_API_ATTR HTStatus SMB_API SkyEx_Resources_RegisterSingleEx(
-  HMODULE hModuleDll,
-  const char *path,
-  const char *name,
+  HMODULE hModule,
+  LPCSTR path,
+  LPCSTR name,
   BOOL forceUpdate
 ) {
-  if (!hModuleDll || !name || !path)
+  if (!hModule)
     return smbiFail(HTError_InvalidHandle);
+
+  if (!name || !path)
+    return smbiFail(HTError_InvalidParam);
 
   if (gResourceBarn.Find(name) && !forceUpdate)
     return smbiFail(HTError_AlreadyExists);
 
   std::wstring modFolder;
-  if (!getModFolder(modFolder, hModuleDll))
+  if (!smbiGetModFolder(modFolder, hModuleDll))
     return HT_FAIL;
 
   std::string bundle;
@@ -165,9 +160,9 @@ SMB_API_ATTR HTStatus SMB_API SkyEx_Resources_RegisterSingleEx(
     return HT_FAIL;
 
   if (name)
-    gResourceBarn.Add(bundle, path, name);
+    gResourceBarn.AddEntry(bundle, path, name);
   else
-    gResourceBarn.Add(bundle, path);
+    gResourceBarn.AddEntry(bundle, path);
 
   return smbiSuccess();
 }

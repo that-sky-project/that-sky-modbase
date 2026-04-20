@@ -8,6 +8,7 @@
 #include "utils/TypeAliases.hpp"
 #include "utils/StringUtils.hpp"
 #include "utils/SmbiObject.hpp"
+#include "utils/PathUtils.hpp"
 
 // ----------------------------------------------------------------------------
 // [SECTION] Modbase/Setup

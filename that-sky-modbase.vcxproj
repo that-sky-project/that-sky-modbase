@@ -1,25 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
-    <ProjectConfiguration Include="Main|x64">
-      <Configuration>Main</Configuration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\api\FmodSoundSystem.cpp" />
     <ClCompile Include="src\api\Gsus.cpp" />
     <ClCompile Include="src\api\Resources.cpp" />
     <ClCompile Include="src\Entry.cpp" />
     <ClCompile Include="src\mod\Mod.cpp" />
     <ClCompile Include="src\mod\SmbiModInitializer.cpp" />
+    <ClCompile Include="src\sky\SmbiFmodSoundSystem.cpp" />
     <ClCompile Include="src\sky\SmbiSkyResource.cpp" />
+    <ClCompile Include="src\utils\PathUtils.cpp" />
     <ClCompile Include="src\utils\StringUtils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\includes\htskymodbase.h" />
     <ClInclude Include="src\ModInternal.hpp" />
     <ClInclude Include="src\mod\SmbiModInitializer.hpp" />
+    <ClInclude Include="src\sky\SmbiFmodSoundSystem.hpp" />
     <ClInclude Include="src\sky\SmbiSkyResource.hpp" />
+    <ClInclude Include="src\utils\PathUtils.hpp" />
     <ClInclude Include="src\utils\SmbiObject.hpp" />
     <ClInclude Include="src\utils\StringUtils.hpp" />
     <ClInclude Include="src\utils\TypeAliases.hpp" />
@@ -33,7 +38,7 @@
     <ProjectName>that-sky-modbase</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Main|x64'" Label="Configuration">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
@@ -45,22 +50,22 @@
   </ImportGroup>
   <ImportGroup Label="Shared">
   </ImportGroup>
-  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Main|x64'">
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Main|x64'">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>$(ProjectDir)\dist\</OutDir>
     <IntDir>$(ProjectDir)\dist\</IntDir>
     <TargetName>that-sky-modbase</TargetName>
   </PropertyGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Main|x64'">
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>false</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;HTSKYMODBASE_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions);SMB_API_ATTR=__declspec(dllexport)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;HTSKYMODBASE_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions);SMB_API_ATTR=__declspec(dllexport);_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>
@@ -73,7 +78,7 @@
       <PrecompiledHeaderOutputFile />
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <OmitFramePointers>false</OmitFramePointers>
-      <AdditionalIncludeDirectories>$(ProjectDir)src\;$(ProjectDir)src\includes\;$(ProjectDir)libraries\htmodloader\includes\htmodloader;$(ProjectDir)libraries\htmodloader\includes\imgui-1.91.9b;$(ProjectDir)libraries\htmodloader\includes\imgui-1.91.9b\backends;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)src\;$(ProjectDir)src\includes\;$(ProjectDir)libraries\htmodloader\includes\htmodloader;$(ProjectDir)libraries\htmodloader\includes\imgui-1.91.9b;$(ProjectDir)libraries\htmodloader\includes\imgui-1.91.9b\backends;$(ProjectDir)libraries\fmod\studio\inc;$(ProjectDir)libraries\fmod\core\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -81,8 +86,8 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <AdditionalLibraryDirectories>$(ProjectDir)libraries\htmodloader\lib\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>htmodloader.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(ProjectDir)libraries\htmodloader\lib\;$(ProjectDir)libraries\fmod\studio\lib\x64;$(ProjectDir)libraries\fmod\core\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>htmodloader.lib;fmod_vc.lib;fmodstudio_vc.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

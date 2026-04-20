@@ -4,7 +4,7 @@
 // [SECTION] Sky/SmbiSkyResourceBarn
 // ----------------------------------------------------------------------------
 
-void SmbiSkyResourceBarn::Add(
+void SmbiSkyResourceBarn::AddEntry(
   const TgcString &bundle,
   const TgcString &path,
   const TgcString &name
@@ -13,11 +13,11 @@ void SmbiSkyResourceBarn::Add(
   m_savedEntry.try_emplace(name, SmbiResourceManifestEntry{path, bundle});
 }
 
-void SmbiSkyResourceBarn::Add(
+void SmbiSkyResourceBarn::AddEntry(
   const TgcString &bundle,
   const TgcString &path
 ) {
-  Add(bundle, path, path);
+  AddEntry(bundle, path, path);
 }
 
 const SmbiResourceManifestEntry *SmbiSkyResourceBarn::Find(
@@ -31,5 +31,3 @@ const SmbiResourceManifestEntry *SmbiSkyResourceBarn::Find(
 
   return &it->second;
 }
-
-

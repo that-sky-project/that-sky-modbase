@@ -42,6 +42,15 @@
     <ClCompile Include="src\utils\StringUtils.cpp">
       <Filter>src\utils</Filter>
     </ClCompile>
+    <ClCompile Include="src\api\FmodSoundSystem.cpp">
+      <Filter>src\api</Filter>
+    </ClCompile>
+    <ClCompile Include="src\utils\PathUtils.cpp">
+      <Filter>src\utils</Filter>
+    </ClCompile>
+    <ClCompile Include="src\sky\SmbiFmodSoundSystem.cpp">
+      <Filter>src\sky</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\includes\htskymodbase.h">
@@ -64,6 +73,12 @@
     </ClInclude>
     <ClInclude Include="src\utils\TypeAliases.hpp">
       <Filter>src\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="src\utils\PathUtils.hpp">
+      <Filter>src\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="src\sky\SmbiFmodSoundSystem.hpp">
+      <Filter>src\sky</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

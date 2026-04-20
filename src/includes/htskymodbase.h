@@ -199,10 +199,8 @@ typedef UINT32 (SMB_API *PFN_SkyExGsu_FindUniformFloat)(
 // of the resource (in the vanilla game, the resource alias is the same as the
 // resource's relative path).
 // 
-// After being proxied by Modbase, the function first looks up the resource using
-// the passed alias in the game, and only then in the mod. Therefore, it is not
-// possible to directly replace game resources by registering a resource with the
-// same name.
+// Mod can replace a resource by setting its name to a path that matches an
+// existing resource file.
 
 // [Extended] Register the resource file at the specified path into the game's
 // resource manifest under the name `name`.
@@ -218,16 +216,82 @@ typedef UINT32 (SMB_API *PFN_SkyExGsu_FindUniformFloat)(
 // structure as the game (see the game's `assets/data/initial` folder for details).
 // A great way is to use "Data/" at the beginning of `path`.
 SMB_API_ATTR HTStatus SMB_API SkyEx_Resources_RegisterSingleEx(
-  HMODULE hModuleDll,
-  const char *path,
-  const char *name,
+  HMODULE hModule,
+  LPCSTR path,
+  LPCSTR name,
   BOOL forceUpdate);
 
 typedef HTStatus (SMB_API *PFN_SkyEx_Resources_RegisterSingleEx)(
-  HMODULE,
-  const char *,
-  const char *);
+  HMODULE, LPCSTR, LPCSTR);
 
+
+// ----------------------------------------------------------------------------
+// [SECTION] Sky/FmodSoundSystem
+// ----------------------------------------------------------------------------
+
+// [Extended] Register Fmod GUIDs for the game to load, simulating the loading
+// of `Master.strings.bank`. Returns HT_SUCCESS when the register successed.
+//
+// The given `pairs` must be an string array like:
+// {
+//   "{00000000-0000-0000-0000-000000000000}", "event:/example",
+//   NULL
+// },
+// and end with a NULL. The GUID must be the format above.
+//
+// During development, you can export GUIDs.txt from FMOD Studio and fill the
+// GUIDs into the array, or use the `RegisterGuidByFile` function.
+SMB_API_ATTR HTStatus SMB_API SkyEx_FmodSoundSystem_RegisterGuids(
+  const LPCSTR *pairs);
+
+typedef HTStatus (SMB_API *PFN_SkyEx_FmodSoundSystem_RegisterGuids)(
+  const LPCSTR *);
+
+
+// [Extended] Register Fmod GUIDs for the game to load from a GUIDs.txt file.
+//
+// The file must be located in the mod folder. `path` must be a relative path.
+//
+// A great way is place the GUID manifest file under `Data/Manifests` folder like
+// the one of the game.
+SMB_API_ATTR HTStatus SMB_API SkyEx_FmodSoundSystem_RegisterGuidByFile(
+  HMODULE hModule,
+  LPCWSTR path);
+
+typedef HTStatus (SMB_API *PFN_SkyEx_FmodSoundSystem_RegisterGuidByFile)(
+  HMODULE, LPCWSTR);
+
+
+// [Extended] Force load FMOD bank array into the memory. This function is
+// single threaded, must be called in the main thread.
+//
+// The contents of paths must be resource file names that have already been
+// registered using the API. The game may crash if `isAsync` is set when try
+// to load banks in HTModOnInit().
+SMB_API_ATTR UINT32 SMB_API SkyEx_FmodSoundSystem_LoadBanks(
+  UINT32 count,
+  const LPCSTR *paths,
+  BOOL isAsync);
+
+typedef UINT32 (SMB_API *PFN_SkyEx_FmodSoundSystem_LoadBanks)(
+  UINT32, const LPCWSTR *, BOOL);
+
+
+// [Extended] Replace the sound event specified by `src` to `dest`.
+SMB_API_ATTR HTStatus SMB_API SkyEx_FmodSoundSystem_ReplaceSoundResource(
+  LPCSTR src,
+  LPCSTR dest);
+
+typedef HTStatus (SMB_API *PFN_SkyEx_FmodSoundSystem_ReplaceSoundResource)(
+  LPCSTR, LPCSTR);
+
+
+// [Extended] Restore the replaced sound event.
+SMB_API_ATTR HTStatus SMB_API SkyEx_FmodSoundSystem_RestoreSoundResource(
+  LPCSTR name);
+
+typedef HTStatus (SMB_API *PFN_SkyEx_FmodSoundSystem_RestoreSoundResource)(
+  LPCSTR);
 
 
 #ifdef __cplusplus

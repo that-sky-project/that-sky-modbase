@@ -6,7 +6,7 @@
 #include "utils/SmbiObject.hpp"
 
 // ----------------------------------------------------------------------------
-// [SECTION] Sky/SmbiSkyResourceBarn
+// [SECTION] Sky/ResourceManifestEntry
 // ----------------------------------------------------------------------------
 
 struct ResourceManifestEntry {
@@ -47,6 +47,10 @@ private:
   TgcString externalData;
 };
 
+// ----------------------------------------------------------------------------
+// [SECTION] Sky/SmbiSkyResourceBarn
+// ----------------------------------------------------------------------------
+
 class SmbiSkyResourceBarn: public SmbiMutexObject {
 public:
   SmbiSkyResourceBarn() = default;
@@ -55,13 +59,13 @@ public:
   // Add an entry with a name. Overwrite if an entry with the same name already
   // exists.
   // The actual resource path is "data/assets/<bundle>/<path>"
-  void Add(
+  void AddEntry(
     const TgcString &bundle,
     const TgcString &path,
     const TgcString &name);
 
   // Add an entry with the path as its name.
-  void Add(
+  void AddEntry(
     const TgcString &bundle,
     const TgcString &path);
 
