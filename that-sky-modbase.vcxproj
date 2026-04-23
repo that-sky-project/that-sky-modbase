@@ -72,13 +72,13 @@
       </PrecompiledHeaderFile>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <LanguageStandard_C>stdc11</LanguageStandard_C>
-      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <BufferSecurityCheck>false</BufferSecurityCheck>
       <EnableEnhancedInstructionSet>AdvancedVectorExtensions2</EnableEnhancedInstructionSet>
       <PrecompiledHeaderOutputFile />
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <OmitFramePointers>false</OmitFramePointers>
-      <AdditionalIncludeDirectories>$(ProjectDir)src\;$(ProjectDir)src\includes\;$(ProjectDir)libraries\htmodloader\includes\htmodloader;$(ProjectDir)libraries\htmodloader\includes\imgui-1.91.9b;$(ProjectDir)libraries\htmodloader\includes\imgui-1.91.9b\backends;$(ProjectDir)libraries\fmod\studio\inc;$(ProjectDir)libraries\fmod\core\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)src\;$(ProjectDir)src\includes\;$(ProjectDir)libraries\htmodloader\includes\htmodloader;$(ProjectDir)libraries\htmodloader\includes\imgui-1.91.9b;$(ProjectDir)libraries\htmodloader\includes\imgui-1.91.9b\backends;$(ProjectDir)libraries\fmod\studio\inc;$(ProjectDir)libraries\fmod\core\inc;$(ProjectDir)libraries\that-sky-engine\src\Code\Base;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -86,8 +86,8 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <AdditionalLibraryDirectories>$(ProjectDir)libraries\htmodloader\lib\;$(ProjectDir)libraries\fmod\studio\lib\x64;$(ProjectDir)libraries\fmod\core\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>htmodloader.lib;fmod_vc.lib;fmodstudio_vc.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(ProjectDir)libraries\htmodloader\lib\;$(ProjectDir)libraries\fmod\studio\lib\x64;$(ProjectDir)libraries\fmod\core\lib\x64;$(ProjectDir)libraries\that-sky-engine\project\vs\that-sky-engine\dist;$(ProjectDir)libraries\that-sky-engine\project\vs\lua\dist;$(ProjectDir)libraries\that-sky-engine\project\vs\dlmalloc\dist;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>htmodloader.lib;fmod_vc.lib;fmodstudio_vc.lib;that-sky-engine.lib;lua.lib;dlmalloc.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

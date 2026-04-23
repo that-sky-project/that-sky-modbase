@@ -15,6 +15,8 @@ HTStatus smbiGetModFolder(
   modFolder.resize(length);
   if (!HTGetModInfoFrom(hManifest, HTModInfoFields_Folder, modFolder.data(), length))
     return smbiFail(HTError_AccessDenied);
+
+  return HT_SUCCESS;
 }
 
 bool smbiIsPathWithin(
