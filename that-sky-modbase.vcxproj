@@ -9,6 +9,7 @@
   <ItemGroup>
     <ClCompile Include="src\api\FmodSoundSystem.cpp" />
     <ClCompile Include="src\api\Gsus.cpp" />
+    <ClCompile Include="src\api\Memory.cpp" />
     <ClCompile Include="src\api\Resources.cpp" />
     <ClCompile Include="src\Entry.cpp" />
     <ClCompile Include="src\mod\Mod.cpp" />

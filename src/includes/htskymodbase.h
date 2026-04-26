@@ -105,6 +105,26 @@ extern "C" {
 #define smbEventUpdateLate        smbMakeNamespace("UpdateLate")
 
 // ----------------------------------------------------------------------------
+// [SECTION] Sky/Memory/StlAllocator
+// ----------------------------------------------------------------------------
+
+// Allocate a 16 byte aligned memory block.
+SMB_API_ATTR LPVOID SMB_API Sky_NewImpl(
+  SIZE_T size);
+
+typedef LPVOID (SMB_API *PFN_Sky_NewImpl)(
+  SIZE_T);
+
+
+// Free a memory block allocated by the game or allocated by Sky_NewImpl().
+SMB_API_ATTR VOID SMB_API Sky_DeleteImpl(
+  LPVOID pBlock);
+
+typedef VOID (SMB_API *PFN_Sky_DeleteImpl)(
+  LPVOID);
+
+
+// ----------------------------------------------------------------------------
 // [SECTION] Sky/Game
 // ----------------------------------------------------------------------------
 

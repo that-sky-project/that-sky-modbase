@@ -19,6 +19,9 @@
     <Filter Include="src\utils">
       <UniqueIdentifier>{77262e26-d773-4f3d-bbca-2b940dfc2381}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\sky\base">
+      <UniqueIdentifier>{62fc79a1-811e-400a-a69e-afad2a775c15}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Entry.cpp">
@@ -50,6 +53,9 @@
     </ClCompile>
     <ClCompile Include="src\sky\SmbiFmodSoundSystem.cpp">
       <Filter>src\sky</Filter>
+    </ClCompile>
+    <ClCompile Include="src\api\Memory.cpp">
+      <Filter>src\api</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
