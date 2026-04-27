@@ -80,6 +80,10 @@ extern "C" {
 #define SMB_API_ATTR
 #endif
 
+#if defined(__cplusplus) && !defined(_MSC_VER)
+#warning "cpp api of HTSkyModbase is recommended to compile with MSVC."
+#endif
+
 // Namespace prefix.
 #define smbNamespace "htskymodbase"
 #define smbMakeNamespace(literal) smbNamespace ":" literal
