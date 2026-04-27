@@ -1,7 +1,7 @@
 #include "ModInternal.hpp"
 
 // ----------------------------------------------------------------------------
-// [SECTION] Sky/Memory/StlAllocator
+// [SECTION] Api/Memory/StlAllocator/exports
 // ----------------------------------------------------------------------------
 
 SMB_API_ATTR LPVOID SMB_API Sky_NewImpl(

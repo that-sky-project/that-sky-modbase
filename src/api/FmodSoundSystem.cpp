@@ -4,7 +4,7 @@
 #include "sky/SmbiFmodSoundSystem.hpp"
 
 // ----------------------------------------------------------------------------
-// [SECTION] Sky/SmbiFmodPathBarn/declarations
+// [SECTION] Api/FmodSoundSystem/declarations
 // ----------------------------------------------------------------------------
 
 typedef void **FmodSoundSystem;
@@ -29,14 +29,14 @@ static FMOD_RESULT F_API hook_EventDescription_getPath(
   int *);
 
 // ----------------------------------------------------------------------------
-// [SECTION] Sky/SmbiFmodPathBarn/variables
+// [SECTION] Api/FmodSoundSystem/variables
 // ----------------------------------------------------------------------------
 
 static SmbiFmodPathBarn gFmodPathBarn;
 static FmodSoundSystem *gSoundSystem = nullptr;
 
 // ----------------------------------------------------------------------------
-// [SECTION] Sky/SmbiFmodPathBarn/init
+// [SECTION] Api/FmodSoundSystem/init
 // ----------------------------------------------------------------------------
 
 static const HTAsmSig sigE8_CreateFmodSoundSystem = {
@@ -80,7 +80,7 @@ static SmbiModInitializer gInit_FmodSoundSystem{
 };
 
 // ----------------------------------------------------------------------------
-// [SECTION] Sky/SmbiFmodPathBarn/functions
+// [SECTION] Api/FmodSoundSystem/functions
 // ----------------------------------------------------------------------------
 
 static HTStatus fnInit_FmodSoundSystem(
@@ -174,7 +174,7 @@ FmodSoundSystem *hook_CreateFmodSoundSystem() {
 }
 
 // ----------------------------------------------------------------------------
-// [SECTION] Sky/SmbiFmodPathBarn/exports
+// [SECTION] Api/FmodSoundSystem/exports
 // ----------------------------------------------------------------------------
 
 SMB_API_ATTR HTStatus SMB_API SkyEx_FmodSoundSystem_RegisterGuids(

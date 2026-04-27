@@ -2,7 +2,7 @@
 #include "mod/SmbiModInitializer.hpp"
 
 // ----------------------------------------------------------------------------
-// [SECTION] Sky/Gsus/init
+// [SECTION] Api/Gsus/init
 // ----------------------------------------------------------------------------
 
 // Shader uniform collections.
@@ -63,7 +63,7 @@ static HTStatus fnInit_GlobalShaderUniforms(
 }
 
 // ----------------------------------------------------------------------------
-// [SECTION] Sky/Gsus/exports
+// [SECTION] Api/Gsus/exports
 // ----------------------------------------------------------------------------
 
 SMB_API_ATTR SkyGlobalShaderUniforms *SMB_API smbSkyGlobalShaderUniforms() {

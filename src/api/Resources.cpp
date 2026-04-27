@@ -5,7 +5,7 @@
 #include "mod/SmbiModInitializer.hpp"
 
 // ----------------------------------------------------------------------------
-// [SECTION] Sky/Resources/declarations
+// [SECTION] Api/Resources/declarations
 // ----------------------------------------------------------------------------
 
 typedef void *ResourceManifest;
@@ -21,13 +21,13 @@ static const ResourceManifestEntry *hook_ResourceManifest_LookUp(
   const char *);
 
 // ----------------------------------------------------------------------------
-// [SECTION] Sky/Resources/variables
+// [SECTION] Api/Resources/variables
 // ----------------------------------------------------------------------------
 
 static SmbiSkyResourceBarn gResourceBarn;
 
 // ----------------------------------------------------------------------------
-// [SECTION] Sky/Resources/init
+// [SECTION] Api/Resources/init
 // ----------------------------------------------------------------------------
 
 static SmbiModInitializer gInit_ResourceManifest{
@@ -66,7 +66,7 @@ static HTStatus fnInit_ResourceManifest(
 }
 
 // ----------------------------------------------------------------------------
-// [SECTION] Sky/Resources/functions
+// [SECTION] Api/Resources/functions
 // ----------------------------------------------------------------------------
 
 static const ResourceManifestEntry *hook_ResourceManifest_LookUp(
@@ -129,7 +129,7 @@ static HTStatus verifyPath(
 }
 
 // ----------------------------------------------------------------------------
-// [SECTION] Sky/Resources/exports
+// [SECTION] Api/Resources/exports
 // ----------------------------------------------------------------------------
 
 SMB_API_ATTR HTStatus SMB_API SkyEx_Resources_RegisterSingleEx(
