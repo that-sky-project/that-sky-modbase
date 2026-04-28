@@ -290,8 +290,7 @@ typedef HTStatus (SMB_API *PFN_SkyEx_FmodSoundSystem_RegisterGuidByFile)(
 // single threaded, must be called in the main thread.
 //
 // The contents of paths must be resource file names that have already been
-// registered using the API. The game may crash if `isAsync` is set when try
-// to load banks in HTModOnInit().
+// registered using the API. Load banks in HTModOnInit() is not allowed.
 SMB_API_ATTR UINT32 SMB_API SkyEx_FmodSoundSystem_LoadBanks(
   UINT32 count,
   const LPCSTR *paths,

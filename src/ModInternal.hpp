@@ -58,4 +58,12 @@ static inline void smbiPathAppendSimple(
     path += L'\\' + s;
 }
 
+#define smbiPrefixLogI(prefix, format, ...) HTTellText("§f[SMB]" prefix "[I] " format, ## __VA_ARGS__)
+#define smbiPrefixLogW(prefix, format, ...) HTTellText("§e[SMB]" prefix "[W] " format, ## __VA_ARGS__)
+#define smbiPrefixLogE(prefix, format, ...) HTTellText("§c[SMB]" prefix "[E] " format, ## __VA_ARGS__)
+
+#define smbiLogI(format, ...) smbiPrefixLogI("", format, ## __VA_ARGS__)
+#define smbiLogW(format, ...) smbiPrefixLogW("", format, ## __VA_ARGS__)
+#define smbiLogE(format, ...) smbiPrefixLogE("", format, ## __VA_ARGS__)
+
 #endif

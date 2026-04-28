@@ -33,6 +33,7 @@ static FMOD_RESULT F_API hook_EventDescription_getPath(
 // ----------------------------------------------------------------------------
 
 static SmbiFmodPathBarn gFmodPathBarn;
+static SmbiSoundReplacementBarn gSoundReplacementBarn;
 static FmodSoundSystem *gSoundSystem = nullptr;
 
 // ----------------------------------------------------------------------------
@@ -91,6 +92,7 @@ static HTStatus fnInit_FmodSoundSystem(
   (void)self;
 
   gFmodPathBarn.Initialize();
+  gSoundReplacementBarn.Initialize();
 
   HMODULE hDllFmodStudio = GetModuleHandleA("fmodstudio.dll");
   sfn_EventDescription_GetPath.fn = (void *)GetProcAddress(
@@ -128,7 +130,7 @@ static FMOD_RESULT F_API hook_EventDescription_getPath(
   if (!registered)
     return FMOD_ERR_EVENT_NOTFOUND;
 
-  // Return result.
+  // Return the result.
   int num = (int)result.length();
   strncpy(path, result.c_str(), size);
   path[size - 1] = 0;
@@ -141,10 +143,10 @@ FmodSoundResource *hook_FmodSoundSystem_GetSoundResource(
   FmodSoundSystem *pThis,
   const char *name
 ) {
-  
+  TgcString realName = gSoundReplacementBarn.GetActualSoundResource(name);
   FmodSoundResource *result = ((PFN_FmodSoundSystem_GetSoundResource)sfn_FmodSoundSystem_GetSoundResource.origin)(
     pThis,
-    name);
+    realName.c_str());
   return result;
 }
 
@@ -153,14 +155,12 @@ FmodSoundSystem *hook_CreateFmodSoundSystem() {
 
   if (!gSoundSystem) {
     gSoundSystem = result;
-    //HTTellText("FmodSoundSystem: 0x%p\n", gSoundSystem);
+    smbiLogI("gSoundSystem = %p", gSoundSystem);
   }
 
   if (!sfn_FmodSoundSystem_LoadSoundBanks.fn) {
     // Virtual function #12.
     sfn_FmodSoundSystem_LoadSoundBanks.fn = (PFN_FmodSoundSystem_LoadSoundBanks)(*gSoundSystem)[12];
-    //sfn_FmodSoundSystem_LoadSoundBanks.detour = (void *)hook_FmodSoundSystem_LoadSoundBanks;
-    //smbiCreateAndEnableHook(NULL, &sfn_FmodSoundSystem_LoadSoundBanks);
   }
 
   if (!sfn_FmodSoundSystem_GetSoundResource.fn) {
@@ -217,9 +217,9 @@ SMB_API_ATTR UINT32 SMB_API SkyEx_FmodSoundSystem_LoadBanks(
 ) {
   if (!count || !paths)
     return smbiSetLastError(0, HTError_InvalidParam);
-  
+
   if (!gSoundSystem)
-    return smbiSetLastError(0, HTError_AlreadyExists);
+    return smbiSetLastError(0, HTError_AccessDenied);
 
   ((PFN_FmodSoundSystem_LoadSoundBanks)sfn_FmodSoundSystem_LoadSoundBanks.origin)(
     gSoundSystem,
@@ -229,4 +229,19 @@ SMB_API_ATTR UINT32 SMB_API SkyEx_FmodSoundSystem_LoadBanks(
     !!isAsync);
 
   return smbiSetLastError(count, HTError_Success);
+}
+
+SMB_API_ATTR HTStatus SMB_API SkyEx_FmodSoundSystem_ReplaceSoundResource(
+  LPCSTR src,
+  LPCSTR dest
+) {
+  gSoundReplacementBarn.Replace(src, dest);
+  return smbiSuccess();
+}
+
+SMB_API_ATTR HTStatus SMB_API SkyEx_FmodSoundSystem_RestoreSoundResource(
+  LPCSTR name
+) {
+  gSoundReplacementBarn.Restore(name);
+  return smbiSuccess();
 }

@@ -47,6 +47,11 @@ bool FmodGuid::operator<(
 // [SECTION] Sky/SmbiFmodPathBarn
 // ----------------------------------------------------------------------------
 
+void SmbiFmodPathBarn::Initialize() {
+  auto lock = LockRW();
+  m_savedPath.clear();
+}
+
 void SmbiFmodPathBarn::AddFmodPath(
   const FmodGuid &guid,
   const TgcString &path
@@ -75,4 +80,40 @@ bool SmbiFmodPathBarn::FindPathByGuid(
   path = entry->second;
 
   return true;
+}
+
+// ----------------------------------------------------------------------------
+// [SECTION] Sky/SmbiSoundReplacementBarn
+// ----------------------------------------------------------------------------
+
+void SmbiSoundReplacementBarn::Initialize() {
+  auto lock = LockRW();
+  m_savedReplacement.clear();
+}
+
+void SmbiSoundReplacementBarn::Replace(
+  const TgcString &res,
+  const TgcString &with
+) {
+  auto lock = LockRW();
+  m_savedReplacement[res] = with;
+}
+
+void SmbiSoundReplacementBarn::Restore(
+  const TgcString &res
+) {
+  auto lock = LockRW();
+  m_savedReplacement.erase(res);
+}
+
+TgcString SmbiSoundReplacementBarn::GetActualSoundResource(
+  const TgcString &res
+) const {
+  auto lock = LockW();
+
+  const auto &entry = m_savedReplacement.find(res);
+  if (entry == m_savedReplacement.end())
+    return res;
+
+  return entry->second;
 }

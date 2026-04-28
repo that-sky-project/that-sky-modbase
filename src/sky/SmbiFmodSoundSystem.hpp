@@ -31,6 +31,8 @@ public:
   SmbiFmodPathBarn() = default;
   ~SmbiFmodPathBarn() = default;
 
+  void Initialize();
+
   void AddFmodPath(
     const FmodGuid &guid,
     const TgcString &path);
@@ -48,7 +50,32 @@ private:
 };
 
 // ----------------------------------------------------------------------------
-// [SECTION] Sky/SmbiFmodBankLoader
+// [SECTION] Sky/SmbiSoundReplacementBarn
 // ----------------------------------------------------------------------------
+
+class SmbiSoundReplacementBarn: public SmbiMutexObject {
+public:
+  SmbiSoundReplacementBarn() = default;
+  ~SmbiSoundReplacementBarn() = default;
+
+  void Initialize();
+
+  // Replace `res` with `with`.
+  void Replace(
+    const TgcString &res,
+    const TgcString &with);
+
+  // Restore replaced sound resource `res`.
+  void Restore(
+    const TgcString &res);
+
+  // Get the actual sound resource name of `res`.
+  TgcString GetActualSoundResource(
+    const TgcString &res
+  ) const;
+
+private:
+  std::map<TgcString, TgcString> m_savedReplacement;
+};
 
 #endif
