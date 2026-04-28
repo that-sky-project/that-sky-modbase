@@ -3,6 +3,7 @@
 
 #include <map>
 #include <string>
+#include <unordered_map>
 #include "fmod_studio.hpp"
 #include "utils/TypeAliases.hpp"
 #include "utils/SmbiObject.hpp"
@@ -75,7 +76,7 @@ public:
   ) const;
 
 private:
-  std::map<TgcString, TgcString> m_savedReplacement;
+  std::unordered_map<TgcString, TgcString> m_savedReplacement;
 };
 
 #endif

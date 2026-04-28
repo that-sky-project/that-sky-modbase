@@ -22,11 +22,17 @@ static HTStatus fnInit_FmodSoundSystem(
   HMODULE,
   const SmbiModInitializer *);
 
+static FmodSoundResource *hook_FmodSoundSystem_GetSoundResource(
+  FmodSoundSystem *pThis,
+  const char *name);
+
 static FMOD_RESULT F_API hook_EventDescription_getPath(
   FMOD::Studio::EventDescription *,
   char *,
   int,
   int *);
+
+static FmodSoundSystem *hook_CreateFmodSoundSystem();
 
 // ----------------------------------------------------------------------------
 // [SECTION] Api/FmodSoundSystem/variables
@@ -88,6 +94,7 @@ static HTStatus fnInit_FmodSoundSystem(
   HMODULE hModuleDll,
   const SmbiModInitializer *self
 ) {
+  HTStatus s;
   (void)hModuleDll;
   (void)self;
 
@@ -100,9 +107,21 @@ static HTStatus fnInit_FmodSoundSystem(
     "?getPath@EventDescription@Studio@FMOD@@QEBA?AW4FMOD_RESULT@@PEADHPEAH@Z");
   sfn_EventDescription_GetPath.detour = (void *)hook_EventDescription_getPath;
 
-  return smbiCreateAndEnableHook(
+  s = smbiCreateAndEnableHook(
     nullptr,
     &sfn_EventDescription_GetPath);
+  if (!s)
+    return HT_FAIL;
+
+  sfn_CreateFmodSoundSystem.detour = (void *)hook_CreateFmodSoundSystem;
+
+  s = smbiCreateAndEnableHook(
+    &sigE8_CreateFmodSoundSystem,
+    &sfn_CreateFmodSoundSystem);
+  if (!s)
+    return HT_FAIL;
+
+  return HT_SUCCESS;
 }
 
 // Note that this function will affect every event.
@@ -139,7 +158,7 @@ static FMOD_RESULT F_API hook_EventDescription_getPath(
   return FMOD_OK;
 }
 
-FmodSoundResource *hook_FmodSoundSystem_GetSoundResource(
+static FmodSoundResource *hook_FmodSoundSystem_GetSoundResource(
   FmodSoundSystem *pThis,
   const char *name
 ) {
@@ -150,7 +169,7 @@ FmodSoundResource *hook_FmodSoundSystem_GetSoundResource(
   return result;
 }
 
-FmodSoundSystem *hook_CreateFmodSoundSystem() {
+static FmodSoundSystem *hook_CreateFmodSoundSystem() {
   FmodSoundSystem *result = ((PFN_CreateFmodSoundSystem)sfn_CreateFmodSoundSystem.origin)();
 
   if (!gSoundSystem) {
@@ -221,7 +240,7 @@ SMB_API_ATTR UINT32 SMB_API SkyEx_FmodSoundSystem_LoadBanks(
   if (!gSoundSystem)
     return smbiSetLastError(0, HTError_AccessDenied);
 
-  ((PFN_FmodSoundSystem_LoadSoundBanks)sfn_FmodSoundSystem_LoadSoundBanks.origin)(
+  ((PFN_FmodSoundSystem_LoadSoundBanks)sfn_FmodSoundSystem_LoadSoundBanks.fn)(
     gSoundSystem,
     paths,
     count,
