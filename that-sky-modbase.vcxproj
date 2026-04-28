@@ -9,6 +9,7 @@
   <ItemGroup>
     <ClCompile Include="src\api\FmodSoundSystem.cpp" />
     <ClCompile Include="src\api\Gsus.cpp" />
+    <ClCompile Include="src\api\LifeCycleHook.cpp" />
     <ClCompile Include="src\api\Memory.cpp" />
     <ClCompile Include="src\api\Resources.cpp" />
     <ClCompile Include="src\Entry.cpp" />
@@ -79,7 +80,7 @@
       <PrecompiledHeaderOutputFile />
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <OmitFramePointers>false</OmitFramePointers>
-      <AdditionalIncludeDirectories>$(ProjectDir)src\;$(ProjectDir)src\includes\;$(ProjectDir)libraries\htmodloader\includes\htmodloader;$(ProjectDir)libraries\htmodloader\includes\imgui-1.91.9b;$(ProjectDir)libraries\htmodloader\includes\imgui-1.91.9b\backends;$(ProjectDir)libraries\fmod\studio\inc;$(ProjectDir)libraries\fmod\core\inc;$(ProjectDir)libraries\that-sky-engine\src\Code\Base;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)src\;$(ProjectDir)src\includes\;$(ProjectDir)libraries\htmodloader\includes\htmodloader;$(ProjectDir)libraries\htmodloader\includes\imgui-1.91.9b;$(ProjectDir)libraries\htmodloader\includes\imgui-1.91.9b\backends;$(ProjectDir)libraries\fmod\studio\inc;$(ProjectDir)libraries\fmod\core\inc;$(ProjectDir)libraries\that-sky-engine\src\Code\Base;$(ProjectDir)libraries\that-sky-engine\libraries\lua;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
