@@ -141,14 +141,17 @@ SMB_API_ATTR HTStatus SMB_API SkyEx_Resources_RegisterSingleEx(
   if (!hModule)
     return smbiFail(HTError_InvalidHandle);
 
-  if (!name || !path)
+  if (!path)
     return smbiFail(HTError_InvalidParam);
+
+  if (!name)
+    name = path;
 
   if (gResourceBarn.Find(name) && !forceUpdate)
     return smbiFail(HTError_AlreadyExists);
 
   std::wstring modFolder;
-  if (!smbiGetModFolder(modFolder, hModuleDll))
+  if (!smbiGetModFolder(modFolder, hModule))
     return HT_FAIL;
 
   std::string bundle;

@@ -25,7 +25,7 @@ bool smbiIsPathWithin(
 ) {
   wchar_t buffer[kMaxPathLen];
 
-  HTPathRelative(buffer, dest.c_str(), src.c_str(), kMaxPathLen);
+  HTPathRelative(buffer, src.c_str(), dest.c_str(), kMaxPathLen);
   if (HTPathIsAbsolute(buffer) || !memcmp(buffer, L"..", 2))
     return false;
 
