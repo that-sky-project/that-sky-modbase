@@ -4,6 +4,7 @@
 #include <Windows.h>
 #include <string>
 #include "htskymodbase.h"
+#include "htskymodbase_meta.h"
 #include "StlAllocator.hpp"
 
 #include "utils/TypeAliases.hpp"
