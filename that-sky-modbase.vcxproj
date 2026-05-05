@@ -13,19 +13,28 @@
     <ClCompile Include="src\api\Memory.cpp" />
     <ClCompile Include="src\api\Resources.cpp" />
     <ClCompile Include="src\Entry.cpp" />
+    <ClCompile Include="src\mod\MetaBinary.cpp" />
     <ClCompile Include="src\mod\Mod.cpp" />
+    <ClCompile Include="src\mod\SmbiBinaryDescriptor.cpp" />
     <ClCompile Include="src\mod\SmbiModInitializer.cpp" />
     <ClCompile Include="src\sky\SmbiFmodSoundSystem.cpp" />
     <ClCompile Include="src\sky\SmbiSkyResource.cpp" />
+    <ClCompile Include="src\utils\FileUtils.cpp" />
     <ClCompile Include="src\utils\PathUtils.cpp" />
     <ClCompile Include="src\utils\StringUtils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\includes\htskymodbase.h" />
+    <ClInclude Include="src\includes\htskymodbase.hpp" />
+    <ClInclude Include="src\includes\htskymodbase_alloc.hpp" />
+    <ClInclude Include="src\includes\htskymodbase_meta.h" />
     <ClInclude Include="src\ModInternal.hpp" />
+    <ClInclude Include="src\mod\MetaBinary.hpp" />
+    <ClInclude Include="src\mod\SmbiBinaryDescriptor.hpp" />
     <ClInclude Include="src\mod\SmbiModInitializer.hpp" />
     <ClInclude Include="src\sky\SmbiFmodSoundSystem.hpp" />
     <ClInclude Include="src\sky\SmbiSkyResource.hpp" />
+    <ClInclude Include="src\utils\FileUtils.hpp" />
     <ClInclude Include="src\utils\PathUtils.hpp" />
     <ClInclude Include="src\utils\SmbiObject.hpp" />
     <ClInclude Include="src\utils\StringUtils.hpp" />
@@ -72,7 +81,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>
       </PrecompiledHeaderFile>
-      <LanguageStandard>stdcpp20</LanguageStandard>
+      <LanguageStandard>stdcpp17</LanguageStandard>
       <LanguageStandard_C>stdc11</LanguageStandard_C>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <BufferSecurityCheck>false</BufferSecurityCheck>
@@ -80,7 +89,7 @@
       <PrecompiledHeaderOutputFile />
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <OmitFramePointers>false</OmitFramePointers>
-      <AdditionalIncludeDirectories>$(ProjectDir)src\;$(ProjectDir)src\includes\;$(ProjectDir)libraries\htmodloader\includes\htmodloader;$(ProjectDir)libraries\htmodloader\includes\imgui-1.91.9b;$(ProjectDir)libraries\htmodloader\includes\imgui-1.91.9b\backends;$(ProjectDir)libraries\fmod\studio\inc;$(ProjectDir)libraries\fmod\core\inc;$(ProjectDir)libraries\that-sky-engine\src\Code\Base;$(ProjectDir)libraries\that-sky-engine\libraries\lua;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)src\;$(ProjectDir)src\includes\;$(ProjectDir)libraries\htmodloader\includes\htmodloader;$(ProjectDir)libraries\htmodloader\includes\imgui-1.91.9b;$(ProjectDir)libraries\htmodloader\includes\imgui-1.91.9b\backends;$(ProjectDir)libraries\htmodloader\includes\cJSON;$(ProjectDir)libraries\fmod\studio\inc;$(ProjectDir)libraries\fmod\core\inc;$(ProjectDir)libraries\that-sky-engine\src\Code\Base;$(ProjectDir)libraries\that-sky-engine\libraries\lua;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

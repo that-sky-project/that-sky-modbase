@@ -1,5 +1,6 @@
 #include <fmod_studio.hpp>
 #include "ModInternal.hpp"
+#include "mod/MetaBinary.hpp"
 #include "mod/SmbiModInitializer.hpp"
 #include "sky/SmbiFmodSoundSystem.hpp"
 
@@ -9,14 +10,6 @@
 
 typedef void **FmodSoundSystem;
 typedef void *FmodSoundResource;
-
-typedef FMOD_RESULT (F_API *PFN_EventDescription_getPath)(
-  FMOD::Studio::EventDescription *, char *, int, int *);
-typedef i08 (__fastcall *PFN_FmodSoundSystem_LoadSoundBanks)(
-  FmodSoundSystem *, const cstring *, u32, const char *, i08);
-typedef FmodSoundResource *(__fastcall *PFN_FmodSoundSystem_GetSoundResource)(
-  FmodSoundSystem *, const char *);
-typedef FmodSoundSystem *(__fastcall *PFN_CreateFmodSoundSystem)();
 
 static HTStatus fnInit_FmodSoundSystem(
   HMODULE,
@@ -46,44 +39,28 @@ static FmodSoundSystem *gSoundSystem = nullptr;
 // [SECTION] Api/FmodSoundSystem/init
 // ----------------------------------------------------------------------------
 
-static const HTAsmSig sigE8_CreateFmodSoundSystem = {
-  "90 ?  ?  ?  ?  48 8B 4E 20 E8 ?  ?  ?  ?  E8 ?  "
-  "?  ?  ?  48 89",
-  HT_SCAN_E8,
-  0x0E
-};
-
-static HTAsmFunction sfn_EventDescription_GetPath{
+static MetaBinaryFunction bin_EventDescription_GetPath = {
   "FMOD::Studio::EventDescription::getPath()",
-  nullptr,
-  nullptr,
-  nullptr
+  hook_EventDescription_getPath
 };
 
-static HTAsmFunction sfn_CreateFmodSoundSystem = {
+static MetaBinaryFunction bin_CreateFmodSoundSystem = {
   "CreateFmodSoundSystem()",
-  nullptr,
-  nullptr,
-  nullptr
+  hook_CreateFmodSoundSystem
 };
 
-static HTAsmFunction sfn_FmodSoundSystem_LoadSoundBanks = {
-  "FmodStudioSoundSystem::LoadSoundBanks()",
-  nullptr,
-  nullptr,
-  nullptr
-};
-
-static HTAsmFunction sfn_FmodSoundSystem_GetSoundResource = {
+static MetaBinaryVirtualFunction bin_FmodSoundSystem_GetSoundResource = {
   "FmodStudioSoundSystem::GetSoundResource()",
-  nullptr,
-  nullptr,
-  nullptr
+  hook_FmodSoundSystem_GetSoundResource
+};
+
+static MetaBinaryVirtualFunction bin_FmodSoundSystem_LoadSoundBanks = {
+  "FmodStudioSoundSystem::LoadSoundBanks()"
 };
 
 static SmbiModInitializer gInit_FmodSoundSystem{
   fnInit_FmodSoundSystem,
-  "FmodStudioSoundSystem::*"
+  "FmodSoundSystem"
 };
 
 // ----------------------------------------------------------------------------
@@ -94,31 +71,16 @@ static HTStatus fnInit_FmodSoundSystem(
   HMODULE hModuleDll,
   const SmbiModInitializer *self
 ) {
-  HTStatus s;
   (void)hModuleDll;
   (void)self;
 
   gFmodPathBarn.Initialize();
   gSoundReplacementBarn.Initialize();
 
-  HMODULE hDllFmodStudio = GetModuleHandleA("fmodstudio.dll");
-  sfn_EventDescription_GetPath.fn = (void *)GetProcAddress(
-    hDllFmodStudio,
-    "?getPath@EventDescription@Studio@FMOD@@QEBA?AW4FMOD_RESULT@@PEADHPEAH@Z");
-  sfn_EventDescription_GetPath.detour = (void *)hook_EventDescription_getPath;
-
-  s = smbiCreateAndEnableHook(
-    nullptr,
-    &sfn_EventDescription_GetPath);
-  if (!s)
+  if (!bin_EventDescription_GetPath.Hook())
     return HT_FAIL;
 
-  sfn_CreateFmodSoundSystem.detour = (void *)hook_CreateFmodSoundSystem;
-
-  s = smbiCreateAndEnableHook(
-    &sigE8_CreateFmodSoundSystem,
-    &sfn_CreateFmodSoundSystem);
-  if (!s)
+  if (!bin_CreateFmodSoundSystem.Hook())
     return HT_FAIL;
 
   return HT_SUCCESS;
@@ -132,7 +94,7 @@ static FMOD_RESULT F_API hook_EventDescription_getPath(
   int *retrieved
 ) {
   // Get path from Master.strings.bank at first.
-  FMOD_RESULT first = ((PFN_EventDescription_getPath)sfn_EventDescription_GetPath.origin)(
+  FMOD_RESULT first = bin_EventDescription_GetPath.Call<FMOD_RESULT>(
     eventdescription, path, size, retrieved);
   if (first != FMOD_ERR_EVENT_NOTFOUND)
     return first;
@@ -163,31 +125,20 @@ static FmodSoundResource *hook_FmodSoundSystem_GetSoundResource(
   const char *name
 ) {
   TgcString realName = gSoundReplacementBarn.GetActualSoundResource(name);
-  FmodSoundResource *result = ((PFN_FmodSoundSystem_GetSoundResource)sfn_FmodSoundSystem_GetSoundResource.origin)(
-    pThis,
-    realName.c_str());
+  FmodSoundResource *result = bin_FmodSoundSystem_GetSoundResource.Call<FmodSoundResource *>(
+    pThis, realName.c_str());
   return result;
 }
 
 static FmodSoundSystem *hook_CreateFmodSoundSystem() {
-  FmodSoundSystem *result = ((PFN_CreateFmodSoundSystem)sfn_CreateFmodSoundSystem.origin)();
+  FmodSoundSystem *result = bin_CreateFmodSoundSystem.Call<FmodSoundSystem *>();
 
   if (!gSoundSystem) {
     gSoundSystem = result;
     smbiLogI("gSoundSystem = %p", gSoundSystem);
   }
 
-  if (!sfn_FmodSoundSystem_LoadSoundBanks.fn) {
-    // Virtual function #12.
-    sfn_FmodSoundSystem_LoadSoundBanks.fn = (PFN_FmodSoundSystem_LoadSoundBanks)(*gSoundSystem)[12];
-  }
-
-  if (!sfn_FmodSoundSystem_GetSoundResource.fn) {
-    // Virtual function #16.
-    sfn_FmodSoundSystem_GetSoundResource.fn = (PFN_FmodSoundSystem_LoadSoundBanks)(*gSoundSystem)[16];
-    sfn_FmodSoundSystem_GetSoundResource.detour = (void *)hook_FmodSoundSystem_GetSoundResource;
-    smbiCreateAndEnableHook(nullptr, &sfn_FmodSoundSystem_GetSoundResource);
-  }
+  bin_FmodSoundSystem_GetSoundResource.Hook(gSoundSystem);
 
   return result;
 }
@@ -240,7 +191,7 @@ SMB_API_ATTR UINT32 SMB_API SkyEx_FmodSoundSystem_LoadBanks(
   if (!gSoundSystem)
     return smbiSetLastError(0, HTError_AccessDenied);
 
-  ((PFN_FmodSoundSystem_LoadSoundBanks)sfn_FmodSoundSystem_LoadSoundBanks.fn)(
+  bin_FmodSoundSystem_LoadSoundBanks.Call<void>(
     gSoundSystem,
     paths,
     count,

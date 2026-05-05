@@ -21,10 +21,10 @@ typedef SkyShaderUniform *(__fastcall *PFN_GlobalShaderUniforms_m_FindUniform)(
 static HTStatus fnInit_GlobalShaderUniforms(
   HMODULE, const SmbiModInitializer *);
 
-static SmbiModInitializer gInit_Gsus{
+/*static SmbiModInitializer gInit_Gsus{
   fnInit_GlobalShaderUniforms,
   "GlobalShaderUniforms::Singleton()"
-};
+};*/
 
 static const HTAsmSig sigE8_GlobalShaderUniforms_Singleton = {
   "48 8D 15 ?  ?  ?  ?  48 89 C1 41 B9 ?  ?  ?  ?  "

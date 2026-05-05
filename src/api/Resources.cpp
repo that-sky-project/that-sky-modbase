@@ -3,6 +3,7 @@
 #include "utils/StringUtils.hpp"
 #include "sky/SmbiSkyResource.hpp"
 #include "mod/SmbiModInitializer.hpp"
+#include "mod/MetaBinary.hpp"
 
 // ----------------------------------------------------------------------------
 // [SECTION] Api/Resources/declarations
@@ -10,12 +11,9 @@
 
 typedef void *ResourceManifest;
 
-typedef const ResourceManifestEntry *(__fastcall *PFN_ResourceManifest_LookUp)(
-  ResourceManifest *, const char *);
-
-static HTStatus fnInit_ResourceManifest(
-  HMODULE,
-  const SmbiModInitializer *);
+static HTStatus fnInit_Resources(
+  HMODULE hModuleDll,
+  const SmbiModInitializer *self);
 static const ResourceManifestEntry *hook_ResourceManifest_LookUp(
   ResourceManifest *,
   const char *);
@@ -30,26 +28,17 @@ static SmbiSkyResourceBarn gResourceBarn;
 // [SECTION] Api/Resources/init
 // ----------------------------------------------------------------------------
 
-static SmbiModInitializer gInit_ResourceManifest{
-  fnInit_ResourceManifest,
-  "ResourceManifest::LookUp()"
-};
-
-static const HTAsmSig sigE8_ResourceManifest_LookUp = {
-  "48 89 CF 48 81 C1 ?  ?  ?  ?  E8 ?  ?  ?  ?  48 "
-  "85 C0 0F 84",
-  HT_SCAN_E8,
-  0x0A
-};
-
-static HTAsmFunction sfn_ResourceManifest_LookUp = {
+static MetaBinaryFunction bin_ResourceManifest_LookUp = {
   "ResourceManifest::LookUp()",
-  nullptr,
-  nullptr,
-  nullptr
+  hook_ResourceManifest_LookUp
 };
 
-static HTStatus fnInit_ResourceManifest(
+static SmbiModInitializer gInit_Resources = {
+  fnInit_Resources,
+  "Resources.cpp"
+};
+
+static HTStatus fnInit_Resources(
   HMODULE hModuleDll,
   const SmbiModInitializer *self
 ) {
@@ -58,11 +47,9 @@ static HTStatus fnInit_ResourceManifest(
 
   gResourceBarn.Initialize();
 
-  sfn_ResourceManifest_LookUp.detour = (void *)hook_ResourceManifest_LookUp;
-
-  return smbiCreateAndEnableHook(
-    &sigE8_ResourceManifest_LookUp,
-    &sfn_ResourceManifest_LookUp);;
+  return bin_ResourceManifest_LookUp.Hook()
+    ? HT_SUCCESS
+    : HT_FAIL;
 }
 
 // ----------------------------------------------------------------------------
@@ -77,7 +64,7 @@ static const ResourceManifestEntry *hook_ResourceManifest_LookUp(
   if (p1)
     return p1->GetEntry();
 
-  return ((PFN_ResourceManifest_LookUp)sfn_ResourceManifest_LookUp.origin)(
+  return bin_ResourceManifest_LookUp.Call<const ResourceManifestEntry *>(
     pThis,
     name);
 }
@@ -87,21 +74,15 @@ static HTStatus getBundlePathFor(
   const std::wstring &modFolder,
   std::string &bundlePath
 ) {
-  wchar_t buffer[kMaxPathLen];
-
   // TODO: Maybe we don't need to use HTPathJoin().
-  const wchar_t *paths[] = {
-    modFolder.c_str(),
-    L"assets",
-    nullptr
-  };
-  HTPathJoin(buffer, paths, kMaxPathLen);
+  TgcWString t = PathUtils::Join({modFolder.c_str(), L"assets"});
 
   // We assume the current working directory is the directory containing the
   // game executable.
-  HTPathRelative(buffer, L"data/assets", buffer, kMaxPathLen);
+  PathUtils::Relative(L"data/assets", t);
 
-  bundlePath = wcstoansi(buffer);
+  bundlePath = wcstoansi(t);
+
   return HT_SUCCESS;
 }
 
@@ -110,21 +91,14 @@ static HTStatus verifyPath(
   const TgcWString &modFolder,
   cstring path
 ) {
-  wchar_t buffer[kMaxPathLen];
   TgcWString pathWide = ansitowcs(path);
+  TgcWString t = PathUtils::Join({modFolder.c_str(), L"assets", pathWide.c_str()});
 
-  const wchar_t *paths[] = {
-    modFolder.c_str(),
-    L"assets",
-    pathWide.c_str(),
-    nullptr
-  };
-  HTPathJoin(buffer, paths, kMaxPathLen);
-
-  if (!smbiIsPathWithin(buffer, modFolder))
+  if (!PathUtils::IsWithin(t, modFolder))
     return smbiFail(HTError_AccessDenied);
 
-  result = wcstoansi(buffer);
+  result = wcstoansi(t);
+
   return HT_SUCCESS;
 }
 
@@ -151,7 +125,7 @@ SMB_API_ATTR HTStatus SMB_API SkyEx_Resources_RegisterSingleEx(
     return smbiFail(HTError_AlreadyExists);
 
   std::wstring modFolder;
-  if (!smbiGetModFolder(modFolder, hModule))
+  if (!PathUtils::GetModFolder(modFolder, hModule))
     return HT_FAIL;
 
   std::string bundle;

@@ -11,6 +11,7 @@
 #include "utils/StringUtils.hpp"
 #include "utils/SmbiObject.hpp"
 #include "utils/PathUtils.hpp"
+#include "utils/FileUtils.hpp"
 
 // ----------------------------------------------------------------------------
 // [SECTION] Modbase/Setup

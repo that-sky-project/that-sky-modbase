@@ -26,87 +26,81 @@
 // SOFTWARE.
 //
 // ----------------------------------------------------------------------------
-// - htskymodbase.hpp
-// C++ encapsulation of HTSkyModbase APIs.
+// - htskymodbase_alloc.hpp
+// C++ STL allocator of HTSkyModbase .
 // ----------------------------------------------------------------------------
 
-#ifndef __HTSKYMODBASE_HPP__
-#define __HTSKYMODBASE_HPP__
+#ifndef __HTSKYMODBASE_ALLOC_HPP__
+#define __HTSKYMODBASE_ALLOC_HPP__
 
 #include <new>
-#include <vector>
-#include <string>
 #include "htskymodbase.h"
 
 // ----------------------------------------------------------------------------
-// [SECTION] Api/cpp/SkyEx
+// [SECTION] Api/cpp/Memory
 // ----------------------------------------------------------------------------
 
-namespace SkyEx {
+#ifdef _MSC_VER
+#pragma warning(disable: 4595)
+#pragma warning(disable: 28251)
+#endif
 
-namespace Resources {
+// Basic allocator override.
+inline void *operator new(
+  size_t _Size
+  ) {
+  if (!_Size) _Size = 1;
 
-static HTStatus RegisterSingleEx(
-  HMODULE hModule,
-  LPCSTR path,
-  LPCSTR name,
-  BOOL forceUpdate = 0
-) {
-  return SkyEx_Resources_RegisterSingleEx(hModule, path, name, forceUpdate);
+  void *raw = Sky_NewImpl(_Size);
+  if (!raw) throw std::bad_alloc();
+
+  return raw;
 }
 
-static HTStatus RegisterSingleEx(
-  HMODULE hModule,
-  LPCSTR path,
-  BOOL forceUpdate = 0
-) {
-  return SkyEx_Resources_RegisterSingleEx(hModule, path, nullptr, forceUpdate);
+inline void *operator new[](size_t _Size) {
+  return operator new(_Size);
 }
 
-// namespace Resources
+inline void operator delete(
+  void *_Block
+  ) noexcept {
+  return Sky_DeleteImpl(_Block);
 }
 
-namespace FmodSoundSystem {
-
-static HTStatus RegisterGuids(
-  const LPCSTR *pairs
-) {
-  return SkyEx_FmodSoundSystem_RegisterGuids(pairs);
+inline void operator delete[](
+  void *_Block
+  ) noexcept {
+  return operator delete(_Block);
 }
 
-static HTStatus RegisterGuids(
-  const std::vector<std::string> &pairs
-) {
-  std::vector<const char *> cstringPairs;
-  for (auto &s: pairs)
-    cstringPairs.push_back(s.c_str());
-  cstringPairs.push_back(nullptr);
-  return SkyEx_FmodSoundSystem_RegisterGuids(cstringPairs.data());
+// Nothrow allocator override.
+inline void *operator new(
+  std::size_t _Size,
+  const std::nothrow_t &
+  ) noexcept {
+  if (!_Size) _Size = 1;
+  return Sky_NewImpl(_Size);
 }
 
-static HTStatus RegisterGuids(
-  const std::vector<std::pair<std::string, std::string>> &pairs
-) {
-  std::vector<const char *> cstringPairs;
-  for (auto &p: pairs) {
-    cstringPairs.push_back(p.first.c_str());
-    cstringPairs.push_back(p.second.c_str());
-  }
-  cstringPairs.push_back(nullptr);
-  return SkyEx_FmodSoundSystem_RegisterGuids(cstringPairs.data());
+inline void *operator new[](
+  size_t _Size,
+  const std::nothrow_t &_Tag
+  ) noexcept {
+  return operator new(_Size, _Tag);
 }
 
+inline void operator delete(
+  void *_Block,
+  const std::nothrow_t &
+  ) noexcept {
+  return operator delete(_Block);
 }
 
-// namespace SkyEx
-}
-
-// ----------------------------------------------------------------------------
-// [SECTION] Api/cpp/Sky
-// ----------------------------------------------------------------------------
-
-namespace Sky {
-
+inline void operator delete[](
+  void *_Block,
+  const std::nothrow_t &
+  ) noexcept {
+  return operator delete(_Block);
 }
 
 #endif

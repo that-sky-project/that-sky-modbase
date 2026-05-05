@@ -60,6 +60,15 @@
     <ClCompile Include="src\api\LifeCycleHook.cpp">
       <Filter>src\api</Filter>
     </ClCompile>
+    <ClCompile Include="src\mod\MetaBinary.cpp">
+      <Filter>src\mod</Filter>
+    </ClCompile>
+    <ClCompile Include="src\mod\SmbiBinaryDescriptor.cpp">
+      <Filter>src\mod</Filter>
+    </ClCompile>
+    <ClCompile Include="src\utils\FileUtils.cpp">
+      <Filter>src\utils</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\includes\htskymodbase.h">
@@ -88,6 +97,24 @@
     </ClInclude>
     <ClInclude Include="src\sky\SmbiFmodSoundSystem.hpp">
       <Filter>src\sky</Filter>
+    </ClInclude>
+    <ClInclude Include="src\mod\MetaBinary.hpp">
+      <Filter>src\mod</Filter>
+    </ClInclude>
+    <ClInclude Include="src\mod\SmbiBinaryDescriptor.hpp">
+      <Filter>src\mod</Filter>
+    </ClInclude>
+    <ClInclude Include="src\includes\htskymodbase.hpp">
+      <Filter>src\includes</Filter>
+    </ClInclude>
+    <ClInclude Include="src\includes\htskymodbase_meta.h">
+      <Filter>src\includes</Filter>
+    </ClInclude>
+    <ClInclude Include="src\includes\htskymodbase_alloc.hpp">
+      <Filter>src\includes</Filter>
+    </ClInclude>
+    <ClInclude Include="src\utils\FileUtils.hpp">
+      <Filter>src\utils</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

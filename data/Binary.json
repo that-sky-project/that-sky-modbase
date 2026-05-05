@@ -1,0 +1,40 @@
+[
+  {
+    "type": "function",
+    "name": "ModuleBarn::CallFunction()",
+    "method": "e8",
+    "pattern": "48 89 FA 41 B8 ?  ?  ?  ?  45 31 C9 E8 ?  ?  ?  ?  80 3D",
+    "offset": "0x0C"
+  },
+  {
+    "type": "function",
+    "name": "ResourceManifest::LookUp()",
+    "method": "e8",
+    "pattern": "48 89 CF 48 81 C1 ?  ?  ?  ?  E8 ?  ?  ?  ?  48 85 C0 0F 84",
+    "offset": "0x0A"
+  },
+  {
+    "type": "function",
+    "name": "CreateFmodSoundSystem()",
+    "method": "e8",
+    "pattern": "90 ?  ?  ?  ?  48 8B 4E 20 E8 ?  ?  ?  ?  E8 ?  ?  ?  ?  48 89",
+    "offset": "0x0E"
+  },
+  {
+    "type": "function",
+    "name": "FMOD::Studio::EventDescription::getPath()",
+    "method": "symbol",
+    "module": "fmodstudio.dll",
+    "symbol": "?getPath@EventDescription@Studio@FMOD@@QEBA?AW4FMOD_RESULT@@PEADHPEAH@Z"
+  },
+  {
+    "type": "virtual_function",
+    "name": "FmodStudioSoundSystem::LoadSoundBanks()",
+    "slot_index": 12
+  },
+  {
+    "type": "virtual_function",
+    "name": "FmodStudioSoundSystem::GetSoundResource()",
+    "slot_index": 16
+  }
+]

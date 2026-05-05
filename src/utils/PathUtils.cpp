@@ -1,10 +1,13 @@
+#include <filesystem>
 #include "ModInternal.hpp"
 
-HTStatus smbiGetModFolder(
+using path = std::filesystem::path;
+
+HTStatus PathUtils::GetModFolder(
   TgcWString &modFolder,
-  HMODULE hModuleDll
+  HMODULE hModule
 ) {
-  HTHandle hManifest = HTGetModManifest(hModuleDll);
+  HTHandle hManifest = HTGetModManifest(hModule);
   if (!hManifest)
     return smbiFail(HTError_ModuleNotFound);
 
@@ -19,7 +22,7 @@ HTStatus smbiGetModFolder(
   return HT_SUCCESS;
 }
 
-bool smbiIsPathWithin(
+bool PathUtils::IsWithin(
   const TgcWString &dest,
   const TgcWString &src
 ) {
@@ -30,4 +33,39 @@ bool smbiIsPathWithin(
     return false;
 
   return true;
+}
+
+TgcWString PathUtils::Relative(
+  const TgcWString &dest,
+  const TgcWString &src
+) {
+  u32 length = HTPathRelative(nullptr, src.c_str(), dest.c_str(), 0x7FFFFFFF);
+  if (!length)
+    return L"";
+
+  TgcWString result(length - 1, L'\0');
+  if (!HTPathRelative(result.data(), src.c_str(), dest.c_str(), length))
+    return L"";
+
+  return result;
+}
+
+TgcWString PathUtils::Join(
+  const std::vector<TgcWString> &segments
+) {
+  std::vector<const wchar_t *> list(segments.size() + 1, nullptr);
+
+  for (u32 i = 0; i < segments.size(); i++)
+    list[i] = segments[i].c_str();
+
+  // We set maxLength to a large number to avoid a bug (#8) of HTModLoader.
+  u32 length = HTPathJoin(nullptr, list.data(), 0x7FFFFFFF);
+  if (!length)
+    return L"";
+
+  TgcWString result(length - 1, L'\0');
+  if (!HTPathJoin(result.data(), list.data(), length))
+    return L"";
+
+  return result;
 }

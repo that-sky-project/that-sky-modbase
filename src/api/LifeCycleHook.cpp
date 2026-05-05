@@ -1,5 +1,6 @@
 #include "ModInternal.hpp"
 #include "mod/SmbiModInitializer.hpp"
+#include "mod/MetaBinary.hpp"
 
 // ----------------------------------------------------------------------------
 // [SECTION] Api/LifeCycleHook/declarations
@@ -34,23 +35,14 @@ void hook_ModuleBarn_CallFunction(
 // [SECTION] Api/LifeCycleHook/init
 // ----------------------------------------------------------------------------
 
-static const HTAsmSig sigE8_ModuleBarn_CallFunction = {
-  "48 89 FA 41 B8 ?  ?  ?  ?  45 31 C9 E8 ?  ?  ?  "
-  "?  80 3D",
-  HT_SCAN_E8,
-  0x0C
-};
-
-static HTAsmFunction sfn_ModuleBarn_CallFunction{
-  "ModuleBarn::CallFunction()",
-  nullptr,
-  nullptr,
-  nullptr
-};
-
-static SmbiModInitializer gInit_LifeCycleHook{
+static SmbiModInitializer gInit_LifeCycleHook = {
   fnInit_LifeCycleHook,
-  "ModuleBarn::CallFunction()"
+  "LifeCycleHook"
+};
+
+static MetaBinaryFunction bin_ModuleBarn_CallFunction = {
+  "ModuleBarn::CallFunction()",
+  hook_ModuleBarn_CallFunction,
 };
 
 // ----------------------------------------------------------------------------
@@ -64,11 +56,9 @@ static HTStatus fnInit_LifeCycleHook(
   (void)hModuleDll;
   (void)self;
 
-  sfn_ModuleBarn_CallFunction.detour = (void *)hook_ModuleBarn_CallFunction;
-
-  return smbiCreateAndEnableHook(
-    &sigE8_ModuleBarn_CallFunction,
-    &sfn_ModuleBarn_CallFunction);
+  return bin_ModuleBarn_CallFunction.Hook()
+    ? HT_SUCCESS
+    : HT_FAIL;
 }
 
 void hook_ModuleBarn_CallFunction(
@@ -79,7 +69,7 @@ void hook_ModuleBarn_CallFunction(
   u08 a5
 ) {
   char eventName[64];
-  ((PFN_ModuleBarn_CallFunction)sfn_ModuleBarn_CallFunction.origin)(
+  bin_ModuleBarn_CallFunction.Call<void>(
     pThis,
     name,
     flag,

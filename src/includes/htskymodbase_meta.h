@@ -40,8 +40,11 @@
 #include "htskymodbase.h"
 
 #ifdef __cplusplus
+#ifndef _MSC_VER
 #warning "cpp api of HTSkyModbase is recommended to compile with MSVC for a better compatibility."
+#endif
 #include "htskymodbase.hpp"
+#include <vector>
 #endif
 
 // ----------------------------------------------------------------------------
