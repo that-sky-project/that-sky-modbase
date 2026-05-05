@@ -12,13 +12,13 @@
 struct ResourceManifestEntry {
   ResourceManifestEntry() = default;
 
-  const char *path;
-  const char *bundle;
-  const char *externalData;
-  int unk[3];
-  u32 location;
-  u64 hash;
-  i08 active;
+  const char *path = nullptr;
+  const char *bundle = nullptr;
+  const char *externalData = nullptr;
+  int unk[3] = {0};
+  u32 location = 0;
+  u64 hash = 0;
+  i08 active = 0;
 };
 
 class SmbiResourceManifestEntry {
@@ -29,7 +29,6 @@ public:
   )
     : path(path)
     , bundle(bundle)
-    , externalData("00000000000000000000")
   {
     e.path = this->path.c_str();
     e.bundle = this->bundle.c_str();
@@ -42,9 +41,9 @@ public:
 
 private:
   ResourceManifestEntry e;
-  TgcString path;
-  TgcString bundle;
-  TgcString externalData;
+  TgcString path = "";
+  TgcString bundle = "";
+  TgcString externalData = "00000000000000000000";
 };
 
 // ----------------------------------------------------------------------------

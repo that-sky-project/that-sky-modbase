@@ -79,7 +79,7 @@ static HTStatus getBundlePathFor(
 
   // We assume the current working directory is the directory containing the
   // game executable.
-  PathUtils::Relative(L"data/assets", t);
+  t = PathUtils::Relative(t, L"data/assets");
 
   bundlePath = wcstoansi(t);
 
@@ -87,7 +87,6 @@ static HTStatus getBundlePathFor(
 }
 
 static HTStatus verifyPath(
-  TgcString &result,
   const TgcWString &modFolder,
   cstring path
 ) {
@@ -96,8 +95,6 @@ static HTStatus verifyPath(
 
   if (!PathUtils::IsWithin(t, modFolder))
     return smbiFail(HTError_AccessDenied);
-
-  result = wcstoansi(t);
 
   return HT_SUCCESS;
 }
@@ -132,8 +129,7 @@ SMB_API_ATTR HTStatus SMB_API SkyEx_Resources_RegisterSingleEx(
   if (!getBundlePathFor(modFolder, bundle))
     return HT_FAIL;
 
-  std::string realPath;
-  if (!verifyPath(realPath, modFolder, path))
+  if (!verifyPath(modFolder, path))
     return HT_FAIL;
 
   if (name)
