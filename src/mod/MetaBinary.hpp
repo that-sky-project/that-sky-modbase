@@ -49,7 +49,8 @@ public:
   // Create hook.
   bool Hook();
 
-  // Default call.
+  // Calling a function; if the hook is enabled, the call will be automatically
+  // forwarded to the trampoline function.
   template<typename R, typename ...Args>
   inline R Call(Args &&...args) {
     using PFN_Type = R (*)(std::remove_reference_t<Args>...);
@@ -148,6 +149,8 @@ public:
     PFN_Type fn = (PFN_Type)vftable[m_slotIdx];
     HTAssertMsg(fn, "Try to hook %s on a NULL function", m_name);
 
+    m_sfn.fn = fn;
+
     if (HTAsmHookCreate(hModuleDll, &m_sfn) && HTAsmHookEnable(hModuleDll, m_sfn.fn))
       m_hookEnabled = true;
 
@@ -158,6 +161,8 @@ public:
     return m_slotIdx != kInvalidOffset;
   }
 
+  // Calling a function; if the hook is enabled, the call will be automatically
+  // forwarded to the trampoline function.
   template<typename Ret, typename Obj, typename ...Args>
   inline Ret Call(Obj *obj, Args &&...args) {
     using PFN_Type = Ret (*)(Obj *, std::remove_reference_t<Args>...);
@@ -169,7 +174,10 @@ public:
     PFN_Type fn = (PFN_Type)vftable[m_slotIdx];
     HTAssertMsg(fn, "Try to call %s on a NULL function", m_name);
 
-    return fn(obj, args...);
+    if (fn == (PFN_Type)m_sfn.fn && m_hookEnabled)
+      return ((PFN_Type)m_sfn.origin)(obj, args...);
+    else
+      return fn(obj, args...);
   }
 
 private:
