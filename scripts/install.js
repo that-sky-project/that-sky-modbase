@@ -18,7 +18,7 @@ const gamePath = pl.resolve(args[0])
   , htmlModPath = pl.join(gamePath, "htmodloader/mods/that-sky-modbase")
   , distDllPath = pl.resolve(__dirname, "../dist/that-sky-modbase.dll")
   , manifestPath = pl.resolve(__dirname, "../manifest.json")
-  , binaryDataPath = pl.join(__dirname, "../data/Binary.json");;
+  , binaryDataPath = pl.join(__dirname, "../data/manifests/Binary.json");;
 
 if (!fs.existsSync(distDllPath)) {
   console.error("No compiled that-sky-modbase.dll found.");
