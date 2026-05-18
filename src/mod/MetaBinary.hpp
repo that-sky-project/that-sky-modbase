@@ -53,13 +53,14 @@ public:
   // forwarded to the trampoline function.
   template<typename R, typename ...Args>
   inline R Call(Args &&...args) {
-    using PFN_Type = R (*)(std::remove_reference_t<Args>...);
+    // This call only supports pass-by-value.
+    using PFN_Call = R (*)(std::remove_reference_t<Args>...);
 
     HTAssertMsg(IsValid(), "Try to call uninitialized function %s", m_name);
 
     // Always call the original function.
     // TODO: Maybe we need a mutex.
-    PFN_Type fn = m_hookEnabled ? (PFN_Type)m_sfn.origin : (PFN_Type)m_sfn.fn;
+    PFN_Call fn = m_hookEnabled ? (PFN_Call)m_sfn.origin : (PFN_Call)m_sfn.fn;
 
     return fn(args...);
   }
@@ -140,13 +141,13 @@ public:
     if (!IsValid() || !m_sfn.detour || m_hookEnabled)
       return false;
 
-    using PFN_Type = void *;
+    using PFN_Call = void *;
     HTAssertMsg(obj, "Try to hook %s on a NULL object", m_name);
 
-    PFN_Type *vftable = *((PFN_Type **)obj);
+    PFN_Call *vftable = *((PFN_Call **)obj);
     HTAssertMsg(vftable, "Try to hook %s on a NULL vftable", m_name);
 
-    PFN_Type fn = (PFN_Type)vftable[m_slotIdx];
+    PFN_Call fn = (PFN_Call)vftable[m_slotIdx];
     HTAssertMsg(fn, "Try to hook %s on a NULL function", m_name);
 
     m_sfn.fn = fn;
@@ -165,6 +166,7 @@ public:
   // forwarded to the trampoline function.
   template<typename Ret, typename Obj, typename ...Args>
   inline Ret Call(Obj *obj, Args &&...args) {
+    // This call only supports pass-by-value.
     using PFN_Type = Ret (*)(Obj *, std::remove_reference_t<Args>...);
     HTAssertMsg(obj, "Try to call %s on a NULL object", m_name);
 
