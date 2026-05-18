@@ -11,6 +11,7 @@
     <ClCompile Include="src\api\Gsus.cpp" />
     <ClCompile Include="src\api\LifeCycleHook.cpp" />
     <ClCompile Include="src\api\Memory.cpp" />
+    <ClCompile Include="src\api\MetaSystem.cpp" />
     <ClCompile Include="src\api\Resources.cpp" />
     <ClCompile Include="src\Entry.cpp" />
     <ClCompile Include="src\mod\MetaBinary.cpp" />
@@ -18,6 +19,7 @@
     <ClCompile Include="src\mod\SmbiBinaryDescriptor.cpp" />
     <ClCompile Include="src\mod\SmbiModInitializer.cpp" />
     <ClCompile Include="src\sky\SmbiFmodSoundSystem.cpp" />
+    <ClCompile Include="src\sky\SmbiProxyMetaSystem.cpp" />
     <ClCompile Include="src\sky\SmbiSkyResource.cpp" />
     <ClCompile Include="src\utils\FileUtils.cpp" />
     <ClCompile Include="src\utils\PathUtils.cpp" />
@@ -33,6 +35,7 @@
     <ClInclude Include="src\mod\SmbiBinaryDescriptor.hpp" />
     <ClInclude Include="src\mod\SmbiModInitializer.hpp" />
     <ClInclude Include="src\sky\SmbiFmodSoundSystem.hpp" />
+    <ClInclude Include="src\sky\SmbiProxyMetaSystem.hpp" />
     <ClInclude Include="src\sky\SmbiSkyResource.hpp" />
     <ClInclude Include="src\utils\FileUtils.hpp" />
     <ClInclude Include="src\utils\PathUtils.hpp" />

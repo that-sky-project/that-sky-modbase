@@ -69,6 +69,12 @@
     <ClCompile Include="src\utils\FileUtils.cpp">
       <Filter>src\utils</Filter>
     </ClCompile>
+    <ClCompile Include="src\api\MetaSystem.cpp">
+      <Filter>src\api</Filter>
+    </ClCompile>
+    <ClCompile Include="src\sky\SmbiProxyMetaSystem.cpp">
+      <Filter>src\sky</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\includes\htskymodbase.h">
@@ -115,6 +121,9 @@
     </ClInclude>
     <ClInclude Include="src\utils\FileUtils.hpp">
       <Filter>src\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="src\sky\SmbiProxyMetaSystem.hpp">
+      <Filter>src\sky</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
