@@ -69,3 +69,21 @@ TgcWString PathUtils::Join(
 
   return result;
 }
+
+void PathUtils::AppendSimple(
+  TgcWString &path,
+  const TgcWString &s
+) {
+  int c = 0;
+  if (path[path.length() - 1] == L'\\' || path[path.length() - 1] == L'/')
+    c++;
+  if (s[0] == L'\\' || s[0] == L'/')
+    c++;
+
+  if (c == 2)
+    path += s.substr(1);
+  else if (c == 1)
+    path += s;
+  else
+    path += L'\\' + s;
+}

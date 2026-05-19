@@ -1,5 +1,6 @@
 #include <fmod_studio.hpp>
 #include "ModInternal.hpp"
+#include "mod/Mod.hpp"
 #include "mod/MetaBinary.hpp"
 #include "mod/SmbiModInitializer.hpp"
 #include "sky/SmbiFmodSoundSystem.hpp"
@@ -31,8 +32,6 @@ static FmodSoundSystem *hook_CreateFmodSoundSystem();
 // [SECTION] Api/FmodSoundSystem/variables
 // ----------------------------------------------------------------------------
 
-static SmbiFmodPathBarn gFmodPathBarn;
-static SmbiSoundReplacementBarn gSoundReplacementBarn;
 static FmodSoundSystem *gSoundSystem = nullptr;
 
 // ----------------------------------------------------------------------------
@@ -74,8 +73,8 @@ static HTStatus fnInit_FmodSoundSystem(
   (void)hModuleDll;
   (void)self;
 
-  gFmodPathBarn.Initialize();
-  gSoundReplacementBarn.Initialize();
+  gMod->fmodPathBarn->Initialize();
+  gMod->soundReplacementBarn->Initialize();
 
   if (!bin_EventDescription_GetPath.Hook())
     return HT_FAIL;
@@ -107,7 +106,7 @@ static FMOD_RESULT F_API hook_EventDescription_getPath(
 
   // Get registered event.
   std::string result;
-  bool registered = gFmodPathBarn.FindPathByGuid(result, guid);
+  bool registered = gMod->fmodPathBarn->FindPathByGuid(result, guid);
   if (!registered)
     return FMOD_ERR_EVENT_NOTFOUND;
 
@@ -124,7 +123,7 @@ static FmodSoundResource *hook_FmodSoundSystem_GetSoundResource(
   FmodSoundSystem *pThis,
   const char *name
 ) {
-  TgcString realName = gSoundReplacementBarn.GetActualSoundResource(name);
+  TgcString realName = gMod->soundReplacementBarn->GetActualSoundResource(name);
   FmodSoundResource *result = bin_FmodSoundSystem_GetSoundResource.Call<FmodSoundResource *>(
     pThis, realName.c_str());
   return result;
@@ -167,7 +166,7 @@ SMB_API_ATTR HTStatus SMB_API SkyEx_FmodSoundSystem_RegisterGuids(
     i += 2;
 
     FmodGuid key{guid};
-    gFmodPathBarn.AddFmodPath(key, eventPath);
+    gMod->fmodPathBarn->AddFmodPath(key, eventPath);
   }
 
   return smbiSuccess();
@@ -205,13 +204,13 @@ SMB_API_ATTR HTStatus SMB_API SkyEx_FmodSoundSystem_ReplaceSoundResource(
   LPCSTR src,
   LPCSTR dest
 ) {
-  gSoundReplacementBarn.Replace(src, dest);
+  gMod->soundReplacementBarn->Replace(src, dest);
   return smbiSuccess();
 }
 
 SMB_API_ATTR HTStatus SMB_API SkyEx_FmodSoundSystem_RestoreSoundResource(
   LPCSTR name
 ) {
-  gSoundReplacementBarn.Restore(name);
+  gMod->soundReplacementBarn->Restore(name);
   return smbiSuccess();
 }

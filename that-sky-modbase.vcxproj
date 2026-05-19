@@ -20,6 +20,7 @@
     <ClCompile Include="src\sky\SmbiFmodSoundSystem.cpp" />
     <ClCompile Include="src\sky\SmbiSkyResource.cpp" />
     <ClCompile Include="src\utils\FileUtils.cpp" />
+    <ClCompile Include="src\utils\HookUtils.cpp" />
     <ClCompile Include="src\utils\PathUtils.cpp" />
     <ClCompile Include="src\utils\StringUtils.cpp" />
   </ItemGroup>
@@ -30,11 +31,13 @@
     <ClInclude Include="src\includes\htskymodbase_meta.h" />
     <ClInclude Include="src\ModInternal.hpp" />
     <ClInclude Include="src\mod\MetaBinary.hpp" />
+    <ClInclude Include="src\mod\Mod.hpp" />
     <ClInclude Include="src\mod\SmbiBinaryDescriptor.hpp" />
     <ClInclude Include="src\mod\SmbiModInitializer.hpp" />
     <ClInclude Include="src\sky\SmbiFmodSoundSystem.hpp" />
     <ClInclude Include="src\sky\SmbiSkyResource.hpp" />
     <ClInclude Include="src\utils\FileUtils.hpp" />
+    <ClInclude Include="src\utils\HookUtils.hpp" />
     <ClInclude Include="src\utils\PathUtils.hpp" />
     <ClInclude Include="src\utils\SmbiObject.hpp" />
     <ClInclude Include="src\utils\StringUtils.hpp" />

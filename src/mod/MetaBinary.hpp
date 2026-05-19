@@ -152,7 +152,7 @@ public:
 
     m_sfn.fn = fn;
 
-    if (HTAsmHookCreate(hModuleDll, &m_sfn) && HTAsmHookEnable(hModuleDll, m_sfn.fn))
+    if (HookUtils::CreateAndEnableHook(nullptr, &m_sfn))
       m_hookEnabled = true;
 
     return m_hookEnabled;

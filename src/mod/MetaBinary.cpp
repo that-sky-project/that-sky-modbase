@@ -1,5 +1,6 @@
 #include <includes/htmodloader.h>
 #include "ModInternal.hpp"
+#include "mod/Mod.hpp"
 #include "mod/MetaBinary.hpp"
 #include "mod/SmbiBinaryDescriptor.hpp"
 
@@ -11,7 +12,7 @@ bool MetaBinaryFunction::Hook() {
   if (!IsValid() || !m_sfn.detour || m_hookEnabled)
     return false;
 
-  if (HTAsmHookCreate(hModuleDll, &m_sfn) && HTAsmHookEnable(hModuleDll, m_sfn.fn))
+  if (HookUtils::CreateAndEnableHook(nullptr, &m_sfn))
     m_hookEnabled = true;
 
   return m_hookEnabled;

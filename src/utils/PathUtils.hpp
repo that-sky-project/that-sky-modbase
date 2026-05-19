@@ -44,6 +44,11 @@ static inline TgcWString FileName(
   return p.filename().wstring();
 }
 
+// Simply add a segment to a path.
+void AppendSimple(
+  TgcWString &path,
+  const TgcWString &s);
+
 }
 
 #endif

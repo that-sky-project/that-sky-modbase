@@ -317,6 +317,19 @@ typedef HTStatus (SMB_API *PFN_SkyEx_FmodSoundSystem_RestoreSoundResource)(
   LPCSTR);
 
 
+// ----------------------------------------------------------------------------
+// [SECTION] Sky/Definitions
+// ----------------------------------------------------------------------------
+
+// [Extended] Submit all resource definitions to SkyModbase. This function is
+// asynchronized.
+SMB_API_ATTR VOID SMB_API SkyEx_Definitions_Submit(
+  HMODULE hModuleDll);
+
+typedef VOID (SMB_API *PFN_SkyEx_Definitions_Submit)(
+  HMODULE);
+
+
 #ifdef __cplusplus
 }
 #endif

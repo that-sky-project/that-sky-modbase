@@ -2,6 +2,7 @@
 #include "utils/TypeAliases.hpp"
 #include "utils/StringUtils.hpp"
 #include "sky/SmbiSkyResource.hpp"
+#include "mod/Mod.hpp"
 #include "mod/SmbiModInitializer.hpp"
 #include "mod/MetaBinary.hpp"
 
@@ -17,12 +18,6 @@ static HTStatus fnInit_Resources(
 static const ResourceManifestEntry *hook_ResourceManifest_LookUp(
   ResourceManifest *,
   const char *);
-
-// ----------------------------------------------------------------------------
-// [SECTION] Api/Resources/variables
-// ----------------------------------------------------------------------------
-
-static SmbiSkyResourceBarn gResourceBarn;
 
 // ----------------------------------------------------------------------------
 // [SECTION] Api/Resources/init
@@ -45,7 +40,7 @@ static HTStatus fnInit_Resources(
   (void)hModuleDll;
   (void)self;
 
-  gResourceBarn.Initialize();
+  gMod->resourceBarn->Initialize();
 
   return bin_ResourceManifest_LookUp.Hook()
     ? HT_SUCCESS
@@ -60,7 +55,7 @@ static const ResourceManifestEntry *hook_ResourceManifest_LookUp(
   ResourceManifest *pThis,
   const char *name
 ) {
-  const SmbiResourceManifestEntry *p1 = gResourceBarn.Find(name);
+  const SmbiResourceManifestEntry *p1 = gMod->resourceBarn->Find(name);
   if (p1)
     return p1->GetEntry();
 
@@ -109,6 +104,8 @@ SMB_API_ATTR HTStatus SMB_API SkyEx_Resources_RegisterSingleEx(
   LPCSTR name,
   BOOL forceUpdate
 ) {
+  SmbiSkyResourceBarn *res = gMod->resourceBarn;
+
   if (!hModule)
     return smbiFail(HTError_InvalidHandle);
 
@@ -118,7 +115,7 @@ SMB_API_ATTR HTStatus SMB_API SkyEx_Resources_RegisterSingleEx(
   if (!name)
     name = path;
 
-  if (gResourceBarn.Find(name) && !forceUpdate)
+  if (res->Find(name) && !forceUpdate)
     return smbiFail(HTError_AlreadyExists);
 
   std::wstring modFolder;
@@ -133,9 +130,9 @@ SMB_API_ATTR HTStatus SMB_API SkyEx_Resources_RegisterSingleEx(
     return HT_FAIL;
 
   if (name)
-    gResourceBarn.AddEntry(bundle, path, name);
+    res->AddEntry(bundle, path, name);
   else
-    gResourceBarn.AddEntry(bundle, path);
+    res->AddEntry(bundle, path);
 
   return smbiSuccess();
 }
