@@ -193,10 +193,15 @@ void SmbiBinaryDescriptor::Resolve() {
       break;
     }
     case kInitType_Offset: {
-      m_resolved = (uintptr_t)GetModuleHandleW(m_module.c_str()) + m_offset;
-      if (!m_resolved)
-        break;
+      if (m_dataType != kDataType_MemberVariable) {
+        m_resolved = (uintptr_t)GetModuleHandleW(m_module.c_str()) + m_offset;
+        if (!m_resolved)
+          break;
+      } else
+        m_resolved = m_offset;
+
       m_done = true;
+
       break;
     }
     case kInitType_GetProcAddr: {
