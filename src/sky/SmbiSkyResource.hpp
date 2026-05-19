@@ -73,7 +73,7 @@ public:
   ) const;
 
 private:
-  std::unordered_map<TgcString, SmbiResourceManifestEntry> m_savedEntry;
+  std::unordered_map<TgcString, SmbiResourceManifestEntry> m_savedEntry = {};
 };
 
 #endif

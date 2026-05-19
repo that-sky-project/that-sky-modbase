@@ -6,6 +6,7 @@
 #include "mod/SmbiBinaryDescriptor.hpp"
 #include "sky/SmbiFmodSoundSystem.hpp"
 #include "sky/SmbiSkyResource.hpp"
+#include "sky/SmbiLevelList.hpp"
 
 // ----------------------------------------------------------------------------
 // [SECTION] Mod/Mod
@@ -29,6 +30,7 @@ public:
   SmbiSkyResourceBarn *resourceBarn = nullptr;
   SmbiFmodPathBarn *fmodPathBarn = nullptr;
   SmbiSoundReplacementBarn *soundReplacementBarn = nullptr;
+  SmbiLevelList *levelList = nullptr;
 };
 
 void Entry(

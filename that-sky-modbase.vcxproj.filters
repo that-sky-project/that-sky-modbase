@@ -72,6 +72,12 @@
     <ClCompile Include="src\utils\HookUtils.cpp">
       <Filter>src\utils</Filter>
     </ClCompile>
+    <ClCompile Include="src\sky\SmbiLevelList.cpp">
+      <Filter>src\sky</Filter>
+    </ClCompile>
+    <ClCompile Include="src\api\Definitions.cpp">
+      <Filter>src\api</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\includes\htskymodbase.h">
@@ -124,6 +130,9 @@
     </ClInclude>
     <ClInclude Include="src\mod\Mod.hpp">
       <Filter>src\mod</Filter>
+    </ClInclude>
+    <ClInclude Include="src\sky\SmbiLevelList.hpp">
+      <Filter>src\sky</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

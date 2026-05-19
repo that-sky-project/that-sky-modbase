@@ -330,6 +330,23 @@ typedef VOID (SMB_API *PFN_SkyEx_Definitions_Submit)(
   HMODULE);
 
 
+// [Extended] Register a level.
+SMB_API_ATTR HTStatus SMB_API SkyEx_Definitions_RegisterLevel(
+  LPCSTR levelName);
+
+typedef HTStatus (SMB_API *PFN_SkyEx_Definitions_RegisterLevel)(
+  LPCSTR);
+
+
+// [Extended] Register a level and its files.
+SMB_API_ATTR HTStatus SMB_API SkyEx_Definitions_RegisterLevelAsFile(
+  HMODULE hModule,
+  LPCSTR levelName);
+
+typedef HTStatus (SMB_API *PFN_SkyEx_Definitions_RegisterLevelAsFile)(
+  HMODULE, LPCSTR);
+
+
 #ifdef __cplusplus
 }
 #endif

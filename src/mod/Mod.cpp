@@ -17,12 +17,14 @@ Mod::~Mod() {
   delete resourceBarn;
   delete fmodPathBarn;
   delete soundReplacementBarn;
+  delete levelList;
 }
 
 void Mod::Alloc() {
   resourceBarn          = new SmbiSkyResourceBarn();
   fmodPathBarn          = new SmbiFmodPathBarn();
   soundReplacementBarn  = new SmbiSoundReplacementBarn();
+  levelList             = new SmbiLevelList();
 }
 
 void Mod::Initialize() {

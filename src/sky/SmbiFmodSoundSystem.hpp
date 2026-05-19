@@ -76,7 +76,7 @@ public:
   ) const;
 
 private:
-  std::unordered_map<TgcString, TgcString> m_savedReplacement;
+  std::unordered_map<TgcString, TgcString> m_savedReplacement = {};
 };
 
 #endif
