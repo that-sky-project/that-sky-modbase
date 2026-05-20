@@ -18,7 +18,7 @@ enum ModuleFlags_ {
 };
 
 typedef void (__fastcall *PFN_ModuleBarn_CallFunction)(
-  ModuleBarn *, const char *, ModuleFlags, u32, u08);
+  ModuleBarn *, const char *, ModuleFlags, u32, u08, void *);
 
 static HTStatus fnInit_LifeCycleHook(
   HMODULE,
@@ -29,7 +29,8 @@ void hook_ModuleBarn_CallFunction(
   const char *name,
   ModuleFlags flag,
   u32 direction,
-  u08 a5);
+  u08 a5,
+  void *a6);
 
 // ----------------------------------------------------------------------------
 // [SECTION] Api/LifeCycleHook/init
@@ -66,7 +67,8 @@ void hook_ModuleBarn_CallFunction(
   const char *name,
   ModuleFlags flag,
   u32 direction,
-  u08 a5
+  u08 a5,
+  void *a6
 ) {
   char eventName[64];
   bin_ModuleBarn_CallFunction.Call<void>(
@@ -74,7 +76,8 @@ void hook_ModuleBarn_CallFunction(
     name,
     flag,
     direction,
-    a5);
+    a5,
+    a6);
 
   if (flag & ModuleFlags_Game) {
     strncpy(eventName, smbMakeNamespace(""), sizeof(eventName));
